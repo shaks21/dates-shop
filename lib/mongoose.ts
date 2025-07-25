@@ -8,7 +8,9 @@ export const connectToDatabase = async () => {
     return;
   }
 
-  const conn = await mongoose.connect(MONGODB_URI);
+  await mongoose.connect(MONGODB_URI);
+
+  // const conn = await mongoose.connect(MONGODB_URI);
   // console.log(`✅ Connected to MongoDB: ${conn.connection.name}`);
 
 };

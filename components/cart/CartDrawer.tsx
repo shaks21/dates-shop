@@ -1,8 +1,10 @@
 "use client";
 import { useCart } from "@/context/CartContext";
 import { X, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function CartDrawer({
   open,
@@ -70,17 +72,21 @@ export default function CartDrawer({
                 key={item.slug}
                 className="flex gap-3 items-start border-b pb-3 border-gray-200 dark:border-zinc-800"
               >
-                <img
+                <Image
                   src={`/${item.image}`}
                   alt={item.title}
+                  width={400}
+                  height={300}
                   className="w-16 h-16 rounded-lg object-cover border border-gray-200 dark:border-zinc-700"
                 />
                 <div className="flex-1 space-y-1">
                   <div className="flex justify-between items-start">
                     <div>
+                       <Link href={`/products/${item.slug}`}>
                       <p className="font-medium text-gray-900 dark:text-white">
                         {item.title}
                       </p>
+                      </Link>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         ${(item.price / 100).toFixed(2)}
                       </p>

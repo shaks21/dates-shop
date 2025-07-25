@@ -4,6 +4,7 @@ import { useCart } from "@/context/CartContext";
 import CheckoutButton from "@/components/cart/CheckoutButton";
 import { Minus, Plus, Trash2 } from "lucide-react"; // Use lucide-react icons if available
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import Image from "next/image";
 
 export default function CartPage() {
   const { cart, removeFromCart, addToCart, clearCart, total } = useCart();
@@ -28,9 +29,11 @@ export default function CartPage() {
           className="flex items-center justify-between bg-white rounded-lg shadow-sm p-4 border border-gray-100"
         >
           <div className="flex items-center space-x-4">
-            <img
+            <Image
               src={`/${item.image}`}
               alt={item.title}
+              width={400}
+              height={300}
               className="w-20 h-20 object-cover rounded-md"
             />
             <div>
