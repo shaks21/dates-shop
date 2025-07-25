@@ -1,102 +1,114 @@
-import Image from "next/image";
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
-export default function Home() {
+type Product = {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  price: number;
+  image: string;
+};
+
+export default function HomePage() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetch("/api/products", { cache: "no-store" })
+      .then((res) => res.json())
+      .then(setProducts);
+  }, []);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen font-sans bg-gradient-to-b from-amber-50 to-white text-stone-800">
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-amber-100 to-amber-50 py-20 px-6 text-center">
+        <h1 className="text-5xl md:text-6xl font-serif font-extrabold text-amber-900 mb-6">
+          Nature’s Finest Organic Dates
+        </h1>
+        <p className="text-lg text-stone-700 max-w-2xl mx-auto mb-8">
+          Indulge in the rich sweetness of sun-ripened dates, grown sustainably and delivered fresh from the oasis to your home.
+        </p>
+        <Link href="#products">
+          <button className="bg-amber-800 text-white px-8 py-3 rounded-full text-lg shadow hover:bg-amber-900 transition">
+            Explore Collection
+          </button>
+        </Link>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* About */}
+      <section id="about" className="max-w-5xl mx-auto px-6 py-16 text-center">
+        <h2 className="text-3xl font-semibold text-amber-900 mb-4">Our Story</h2>
+        <p className="text-stone-700 text-md leading-relaxed max-w-3xl mx-auto">
+          At Organic Dates Co., we are passionate about quality and sustainability. Our dates are hand-picked at peak ripeness,
+          cultivated with care, and never treated with chemicals. We believe in nourishing the body and soul through nature’s purest sweets.
+        </p>
+      </section>
+
+      {/* Features */}
+      <section className="bg-white py-12 px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto text-center">
+          {[
+            { icon: "🌿", label: "100% Organic" },
+            { icon: "🌞", label: "Sun-Ripened" },
+            { icon: "🚚", label: "Eco-Friendly Delivery" },
+            { icon: "✨", label: "Premium Grade Quality" },
+          ].map(({ icon, label }, i) => (
+            <div key={i} className="p-6 rounded-lg bg-amber-50 shadow-sm hover:shadow-md transition">
+              <div className="text-4xl mb-3">{icon}</div>
+              <p className="text-md font-medium text-stone-800">{label}</p>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* Products */}
+      <section id="products" className="py-20 px-6 bg-gradient-to-t from-amber-50 to-white">
+        <h2 className="text-3xl font-bold text-center text-amber-900 mb-10">Our Organic Date Collection</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          {products.map((product) => (
+            <Link key={product._id} href={`/products/${product.slug}`}>
+              <div className="bg-white rounded-xl border shadow-sm hover:shadow-lg transition cursor-pointer p-4">
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="h-52 w-full object-cover rounded-lg mb-4"
+                />
+                <h3 className="text-xl font-semibold text-amber-900 mb-1">{product.title}</h3>
+                <p className="text-sm text-stone-600 line-clamp-2">{product.description}</p>
+                <p className="text-lg font-bold text-amber-700 mt-2">
+                  ${(product.price / 100).toFixed(2)}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="px-6 max-w-3xl mx-auto py-16 text-center">
+        <h3 className="text-2xl font-bold text-amber-900 mb-6">What Our Customers Say</h3>
+        <div className="space-y-6">
+          <blockquote className="bg-white shadow p-6 rounded-xl border border-amber-100">
+            <p className="italic">“Absolutely divine! The dates are soft, juicy, and so flavorful.”</p>
+            <p className="text-sm mt-2 font-semibold text-amber-700">– Aisha K.</p>
+          </blockquote>
+          <blockquote className="bg-white shadow p-6 rounded-xl border border-amber-100">
+            <p className="italic">“These are a staple in our home now. You can taste the quality!”</p>
+            <p className="text-sm mt-2 font-semibold text-amber-700">– Omar R.</p>
+          </blockquote>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer id="footer" className="bg-white mt-20 py-10 px-6 text-center border-t text-sm text-stone-600">
+        <p>&copy; {new Date().getFullYear()} Organic Dates Co. All rights reserved.</p>
+        <p className="mt-2">
+          <Link href="/privacy" className="underline hover:text-amber-700">
+            Privacy Policy
+          </Link>
+        </p>
       </footer>
     </div>
   );
