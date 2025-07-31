@@ -17,12 +17,15 @@ type CartContextType = {
   updateQuantity: (slug: string, quantity: number) => void;
   clearCart: () => void;
   total: number;
+  isCartOpen: boolean;
+  setIsCartOpen: (isOpen: boolean) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     const data = localStorage.getItem("cart");
@@ -46,16 +49,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromCart = (slug: string, removeAll: boolean = false) => {
-  setCart((prev) => {
-    return prev
-      .map((item) =>
-        item.slug === slug
-          ? { ...item, quantity: removeAll ? 0 : item.quantity - 1 }
-          : item
-      )
-      .filter((item) => item.quantity > 0);
-  });
-};
+    setCart((prev) => {
+      return prev
+        .map((item) =>
+          item.slug === slug
+            ? { ...item, quantity: removeAll ? 0 : item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0);
+    });
+  };
 
   const clearCart = () => setCart([]);
   const total = cart.reduce((sum, i) => sum + (i.price / 100) * i.quantity, 0);
@@ -77,6 +80,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         total,
         updateQuantity,
+        isCartOpen, 
+        setIsCartOpen
       }}
     >
       {children}

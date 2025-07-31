@@ -1,4 +1,5 @@
 "use client";
+
 import { useCart } from "@/context/CartContext";
 import { X, Trash2 } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -6,94 +7,79 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function CartDrawer({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
-  const { cart, total, addToCart, removeFromCart, updateQuantity } = useCart();
+export default function CartDrawer() {
+  const {
+    isCartOpen,
+    setIsCartOpen,
+    cart,
+    total,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+  } = useCart();
+
   const drawerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Detect click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        drawerRef.current &&
-        !drawerRef.current.contains(event.target as Node)
-      ) {
-        onClose();
-      }
-    };
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [open, onClose]);
-
   return (
     <>
-      {/* Semi-transparent overlay */}
-      {open && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity" />
+      {isCartOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity"
+          onClick={() => setIsCartOpen(false)}
+        />
       )}
 
-      {/* Cart Drawer */}
       <div
         ref={drawerRef}
-        className={`fixed top-0 right-0 h-full w-80 max-w-full bg-white dark:bg-zinc-900 shadow-2xl z-50 transform transition-transform ${
-          open ? "translate-x-0" : "translate-x-full"
+        onClick={(e) => e.stopPropagation()}
+        className={`fixed top-0 right-0 h-full w-96 max-w-full border-l-2 bg-black text-white z-50 shadow-2xl transition-transform transform duration-300 ease-in-out ${
+          isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-zinc-800">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-            Your Cart
-          </h2>
+        <div className="px-6 py-4 border-b border-white/10 flex justify-between items-center">
+          <h2 className="text-2xl font-black tracking-tighter uppercase">Your Cart</h2>
           <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-red-500 transition"
+            onClick={() => setIsCartOpen(false)}
+            className="hover:text-red-500 transition"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Cart Items */}
-        <div className="p-4 space-y-4 overflow-y-auto h-[70vh]">
+        <div className="px-6 py-6 space-y-6 overflow-y-auto max-h-[70vh]">
           {cart.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Your cart is empty.
-            </p>
+            <p className="text-sm opacity-70">Your cart is empty.</p>
           ) : (
             cart.map((item) => (
               <div
                 key={item.slug}
-                className="flex gap-3 items-start border-b pb-3 border-gray-200 dark:border-zinc-800"
+                className="flex gap-4 items-start border-b border-white/10 pb-4"
               >
                 <Image
                   src={`/${item.image}`}
                   alt={item.title}
-                  width={400}
-                  height={300}
-                  className="w-16 h-16 rounded-lg object-cover border border-gray-200 dark:border-zinc-700"
+                  width={80}
+                  height={80}
+                  className="rounded-lg object-cover border border-white/10"
                 />
                 <div className="flex-1 space-y-1">
                   <div className="flex justify-between items-start">
                     <div>
-                       <Link href={`/products/${item.slug}`}>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {item.title}
-                      </p>
+                      <Link href={`/products/${item.slug}`}>
+                        <p className="font-semibold text-white hover:underline">
+                          {item.title}
+                        </p>
                       </Link>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-sm opacity-60">
                         ${(item.price / 100).toFixed(2)}
                       </p>
                     </div>
                     <button
                       onClick={() => removeFromCart(item.slug, true)}
-                      className="text-red-500 hover:text-red-600 transition"
+                      className="text-red-500 hover:text-red-600"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -105,7 +91,7 @@ export default function CartDrawer({
                         item.quantity > 1 &&
                         updateQuantity(item.slug, item.quantity - 1)
                       }
-                      className="px-2 py-1 text-sm bg-gray-200 dark:bg-zinc-700 rounded hover:bg-gray-300 dark:hover:bg-zinc-600"
+                      className="px-2 py-1 text-sm bg-white/10 rounded hover:bg-white/20"
                     >
                       -
                     </button>
@@ -116,13 +102,13 @@ export default function CartDrawer({
                       onChange={(e) =>
                         updateQuantity(item.slug, parseInt(e.target.value) || 1)
                       }
-                      className="w-12 text-center border border-gray-300 dark:border-zinc-600 rounded py-1 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
+                      className="w-12 text-center bg-black border border-white/20 rounded text-white"
                     />
                     <button
                       onClick={() =>
                         updateQuantity(item.slug, item.quantity + 1)
                       }
-                      className="px-2 py-1 text-sm bg-gray-200 dark:bg-zinc-700 rounded hover:bg-gray-300 dark:hover:bg-zinc-600"
+                      className="px-2 py-1 text-sm bg-white/10 rounded hover:bg-white/20"
                     >
                       +
                     </button>
@@ -135,16 +121,16 @@ export default function CartDrawer({
 
         {/* Footer */}
         {cart.length > 0 && (
-          <div className="p-4 border-t border-gray-200 dark:border-zinc-800 space-y-3">
-            <p className="font-semibold text-lg text-gray-800 dark:text-white">
+          <div className="px-6 py-6 border-t border-white/10 space-y-4">
+            <p className="text-lg font-semibold">
               Total: ${total.toFixed(2)}
             </p>
             <button
               onClick={() => {
                 router.push("/cart");
-                onClose();
+                setIsCartOpen(false);
               }}
-              className="w-full bg-amber-800 hover:bg-amber-900 text-white py-2 rounded-lg font-medium transition"
+              className="w-full bg-white text-black hover:bg-white/90 py-2 rounded-lg font-semibold transition"
             >
               Go to Checkout
             </button>

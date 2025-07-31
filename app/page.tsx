@@ -14,6 +14,7 @@ type Product = {
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [bgImage, setBgImage] = useState("");
 
   useEffect(() => {
     fetch("/api/products", { cache: "no-store" })
@@ -22,132 +23,204 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen font-sans bg-gradient-to-b from-amber-50 to-white text-stone-800">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-amber-100 to-amber-50 py-20 px-6 text-center">
-        <h1 className="text-5xl md:text-6xl font-serif font-extrabold text-amber-900 mb-6">
-          Nature’s Finest Organic Dates
-        </h1>
-        <p className="text-lg text-stone-700 max-w-2xl mx-auto mb-8">
-          Indulge in the rich sweetness of sun-ripened dates, grown sustainably
-          and delivered fresh from the oasis to your home.
-        </p>
-        <Link href="#products">
-          <button className="bg-amber-800 text-white px-8 py-3 rounded-full text-lg shadow hover:bg-amber-900 transition">
-            Explore Collection
-          </button>
-        </Link>
-      </section>
+    <div className="min-h-screen bg-black text-white font-sans">
+      {/* Main Content */}
+      <main className="pt-5">
+        {/* Hero Section */}
+        <section className="px-6 py-20 text-center">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-8 uppercase">
+              ORGANIC
+              <br />
+              DATES
+            </h1>
+            <hr className="border-white/20 my-12" />
+            <p className="text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto opacity-80">
+              Premium sun-ripened dates delivered fresh from the oasis
+            </p>
+          </div>
+        </section>
 
-      {/* About */}
-      <section id="about" className="max-w-5xl mx-auto px-6 py-16 text-center">
-        <h2 className="text-3xl font-semibold text-amber-900 mb-4">
-          Our Story
-        </h2>
-        <p className="text-stone-700 text-md leading-relaxed max-w-3xl mx-auto">
-          At Organic Dates Co., we are passionate about quality and
-          sustainability. Our dates are hand-picked at peak ripeness, cultivated
-          with care, and never treated with chemicals. We believe in nourishing
-          the body and soul through nature’s purest sweets.
-        </p>
-      </section>
-
-      {/* Features */}
-      <section className="bg-white py-12 px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto text-center">
-          {[
-            { icon: "🌿", label: "100% Organic" },
-            { icon: "🌞", label: "Sun-Ripened" },
-            { icon: "🚚", label: "Eco-Friendly Delivery" },
-            { icon: "✨", label: "Premium Grade Quality" },
-          ].map(({ icon, label }, i) => (
-            <div
-              key={i}
-              className="p-6 rounded-lg bg-amber-50 shadow-sm hover:shadow-md transition"
-            >
-              <div className="text-4xl mb-3">{icon}</div>
-              <p className="text-md font-medium text-stone-800">{label}</p>
+        {/* Products List */}
+        <section id="products" className="px-6">
+          <div className="w-full mx-auto">
+            {/* Section Header */}
+            <div className="mb-16 text-center">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tighter uppercase mb-4">
+                Collection
+              </h2>
+              <hr className="w-full h-px border-white/20 my-12" />
             </div>
-          ))}
-        </div>
-      </section>
 
-      {/* Products */}
-      <section
-        id="products"
-        className="py-20 px-6 bg-gradient-to-t from-amber-50 to-white"
-      >
-        <h2 className="text-3xl font-bold text-center text-amber-900 mb-10">
-          Our Organic Date Collection
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          {products.length > 0 && (products.map((product) => (
-            <Link key={product._id} href={`/products/${product.slug}`}>
-              <div className="bg-white rounded-xl border shadow-sm hover:shadow-lg transition cursor-pointer p-4">
-                <Image
-                  src={`/${product.image}`}
-                  alt={product.title}
-                  width={400}
-                  height={300}
-                  className="h-52 w-full object-cover rounded-lg mb-4"
-                />
-                <h3 className="text-xl font-semibold text-amber-900 mb-1">
-                  {product.title}
-                </h3>
-                <p className="text-sm text-stone-600 line-clamp-2">
-                  {product.description}
-                </p>
-                <p className="text-lg font-bold text-amber-700 mt-2">
-                  ${(product.price / 100).toFixed(2)}
-                </p>
-              </div>
-            </Link>
-          )))}
-        </div>
-      </section>
+            {/* Products Grid as List */}
+            <div
+              className="space-y-0 transition-all"
+              style={{
+                backgroundImage: bgImage ? `url(${bgImage})` : "none",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              {products.map((product, index) => (
+                <Link
+                  key={product._id}
+                  href={`/products/${product.slug}`}
+                  className="block group relative overflow-hidden"
+                  onMouseEnter={() => setBgImage(product.image)}
+                  onMouseLeave={() => setBgImage("")}
+                >
+                  {/* Optional: faded overlay */}
+                  <div className="relative z-10 group cursor-pointer border-b border-white/70  bg-black/10">
+                    <div className="flex items-center justify-between py-4 md:py-6">
+                      {/* Number */}
+                      <div className="text-sm font-mono w-12 px-10">
+                        {String(index + 1)}
+                      </div>
 
-      {/* Testimonials */}
-      <section
-        id="testimonials"
-        className="px-6 max-w-3xl mx-auto py-16 text-center"
-      >
-        <h3 className="text-2xl font-bold text-amber-900 mb-6">
-          What Our Customers Say
-        </h3>
-        <div className="space-y-6">
-          <blockquote className="bg-white shadow p-6 rounded-xl border border-amber-100">
-            <p className="italic">
-              “Absolutely divine! The dates are soft, juicy, and so flavorful.”
+                      {/* Product Name */}
+                      <div className="flex-1 text-center px-8 min-h-[3.5rem] md:min-h-[5rem] lg:min-h-[6rem]">
+                        {" "}
+                        {/* Fixed height */}
+                        <h3
+                          className="text-[1.5rem] md:text-[2.25rem] lg:text-[3rem] font-black tracking-tighter uppercase
+                   transition-[font-size,color] duration-300 ease-in-out
+                   group-hover:text-transparent 
+                   group-hover:[-webkit-text-stroke:1px_white] 
+                   group-hover:[text-stroke:1px_black]
+                   group-hover:text-[1.4rem] md:group-hover:text-[2.15rem] lg:group-hover:text-[2.8rem]"
+                        >
+                          {product.title}
+                        </h3>
+                      </div>
+
+                      {/* Price */}
+                      {/* <div className="text-right">
+                        <span className="text-xl md:text-2xl font-mono">
+                          ${(product.price / 100).toFixed(2)}
+                        </span>
+                      </div> */}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Load More */}
+            <div className="text-center mt-16 mb-20">
+              <button className="text-lg font-light tracking-wider hover:opacity-70 transition-opacity border-b border-white/30 pb-1">
+                And More...
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="px-6 py-20 bg-white/5">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-12">
+              Our Story
+            </h2>
+            <hr className="w-full h-px border-white/20 my-12" />
+            <p className="text-lg md:text-xl font-light leading-relaxed opacity-80 max-w-3xl mx-auto">
+              At Organic Dates Co., we are passionate about quality and
+              sustainability. Our dates are hand-picked at peak ripeness,
+              cultivated with care, and never treated with chemicals.
             </p>
-            <p className="text-sm mt-2 font-semibold text-amber-700">
-              – Aisha K.
-            </p>
-          </blockquote>
-          <blockquote className="bg-white shadow p-6 rounded-xl border border-amber-100">
-            <p className="italic">
-              “These are a staple in our home now. You can taste the quality!”
-            </p>
-            <p className="text-sm mt-2 font-semibold text-amber-700">
-              – Omar R.
-            </p>
-          </blockquote>
-        </div>
-      </section>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section className="px-6 py-20">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                {
+                  number: "01",
+                  label: "100% Organic",
+                  desc: "Pure and natural",
+                },
+                {
+                  number: "02",
+                  label: "Sun-Ripened",
+                  desc: "Perfect sweetness",
+                },
+                {
+                  number: "03",
+                  label: "Eco-Friendly",
+                  desc: "Sustainable delivery",
+                },
+                {
+                  number: "04",
+                  label: "Premium Grade",
+                  desc: "Highest quality",
+                },
+              ].map(({ number, label, desc }) => (
+                <div key={number} className="text-center group">
+                  <div className="text-6xl font-black opacity-20 mb-4">
+                    {number}
+                  </div>
+                  <h3 className="text-xl font-bold tracking-wider uppercase mb-2">
+                    {label}
+                  </h3>
+                  <p className="text-sm opacity-70 font-light">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section id="testimonials" className="px-6 py-20 bg-white/5">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-center mb-16">
+              Testimonials
+            </h2>
+            <div className="space-y-12">
+              {[
+                {
+                  quote:
+                    "Absolutely divine! The dates are soft, juicy, and so flavorful.",
+                  author: "Aisha K.",
+                },
+                {
+                  quote:
+                    "These are a staple in our home now. You can taste the quality!",
+                  author: "Omar R.",
+                },
+              ].map((testimonial, index) => (
+                <div key={index} className="text-center">
+                  <blockquote className="text-xl md:text-2xl font-light italic mb-4 opacity-90">
+                    "{testimonial.quote}"
+                  </blockquote>
+                  <cite className="text-sm font-mono opacity-60 not-italic">
+                    — {testimonial.author}
+                  </cite>
+                  {index === 0 && (
+                    <hr className="w-32 h-px border-white/20 mx-auto mt-12" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
 
       {/* Footer */}
-      <footer
-        id="footer"
-        className="bg-white mt-20 py-10 px-6 text-center border-t text-sm text-stone-600"
-      >
-        <p>
-          &copy; {new Date().getFullYear()} Organic Dates Co. All rights
-          reserved.
-        </p>
-        <p className="mt-2">
-          <Link href="/privacy" className="underline hover:text-amber-700">
+      <footer className="px-6 py-12 border-t border-white/10">
+        <div className="max-w-6xl mx-auto text-center">
+          <small className="text-sm font-mono opacity-50 mb-4">
+            © {new Date().getFullYear()}, Organic Dates Co., All Rights
+            Reserved.
+          </small>
+          <br />
+          <Link
+            href="/privacy"
+            className="text-sm hover:opacity-70 transition-opacity border-b border-white/30 pb-1"
+          >
             Privacy Policy
           </Link>
-        </p>
+        </div>
       </footer>
     </div>
   );

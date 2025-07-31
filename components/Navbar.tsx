@@ -1,26 +1,98 @@
 // components/Navbar.tsx
 "use client";
-import CartButton from "./cart/CartButton";
+import { useState } from "react";
 import Link from "next/link";
+import CartButton from "./cart/CartButton";
+import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const { isCartOpen } = useCart();
+
+  // if (isCartOpen) return null; // Don't render when cart is open
+  
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <header className="sticky top-0 bg-white shadow z-50">
-      {/* Navbar */}
-      <nav className="flex justify-between items-center px-8 py-5 bg-white shadow-md sticky top-0 z-50">
-        <Link href="/" className="text-3xl font-serif font-extrabold text-amber-900 tracking-wide">
-          Organic Dates Co.
+    <header className="fixed top-0 w-full z-50 bg-black">
+      <nav className="flex justify-between items-center px-6 py-4">
+        <Link href="/" className="text-sm font-bold tracking-wider text-white">
+          DATES CO
         </Link>
-        <div className="space-x-6 text-md text-stone-700 font-medium">
-          <Link href="/#about" className="hover:text-amber-700">Our Story</Link>
-          <Link href="/#products" className="hover:text-amber-700">Shop</Link>
-          <Link href="/#testimonials" className="hover:text-amber-700">Reviews</Link>
-          <Link href="/#footer" className="hover:text-amber-700">Contact</Link>
+        
+        {/* Desktop Navigation (hidden on mobile) */}
+        <div className="hidden md:flex space-x-6 text-white">
+          <Link href="/#about" className="hover:opacity-70">Our Story</Link>
+          <Link href="/#products" className="hover:opacity-70">Shop</Link>
+          <Link href="/#testimonials" className="hover:opacity-70">Reviews</Link>
+          <Link href="/#footer" className="hover:opacity-70">Contact</Link>
           <CartButton />
         </div>
-      </nav>
 
-        
+        {/* Mobile Burger Button */}
+        <button 
+          className="md:hidden flex flex-col gap-1 relative z-60"
+          onClick={toggleMenu}
+          aria-label="Menu"
+        >
+          <span className={`w-6 h-0.5 bg-white transition-all ${isOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+          <span className={`w-6 h-0.5 bg-white transition-all ${isOpen ? 'opacity-0' : ''}`}></span>
+          <span className={`w-6 h-0.5 bg-white transition-all ${isOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+        </button>
+
+        {/* Mobile Menu */}
+        <div className={`fixed inset-0 bg-gray-200 z-50 flex flex-col items-center justify-center space-y-12 transition-all duration-300 ease-in-out ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+          <Link 
+            href="/#about" 
+            className="text-5xl font-black tracking-tighter uppercase
+                      transition-all
+                      hover:text-transparent 
+                      hover:[-webkit-text-stroke:1px_black] 
+                      hover:[text-stroke:1px_black]"
+            onClick={() => setIsOpen(false)}
+          >
+            Our Story
+          </Link>
+          <Link 
+            href="/#products" 
+            className="text-5xl font-black tracking-tighter uppercase
+                      transition-all
+                      hover:text-transparent 
+                      hover:[-webkit-text-stroke:1px_black] 
+                      hover:[text-stroke:1px_black]"
+            onClick={() => setIsOpen(false)}
+          >
+            Shop
+          </Link>
+          <Link 
+            href="/#testimonials" 
+            className="text-5xl font-black tracking-tighter uppercase
+                      transition-all
+                      hover:text-transparent 
+                      hover:[-webkit-text-stroke:1px_black] 
+                      hover:[text-stroke:1px_black]"
+            onClick={() => setIsOpen(false)}
+          >
+            Reviews
+          </Link>
+          <Link 
+            href="/#footer" 
+            className="text-5xl font-black tracking-tighter uppercase
+                      transition-all
+                      hover:text-transparent 
+                      hover:[-webkit-text-stroke:1px_black] 
+                      hover:[text-stroke:1px_black]"
+            onClick={() => setIsOpen(false)}
+          >
+            Contact
+          </Link>
+          <div className="mt-8">
+            <CartButton mobile />
+          </div>
+        </div>
+      </nav>
     </header>
   );
 }

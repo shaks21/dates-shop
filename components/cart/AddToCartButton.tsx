@@ -6,8 +6,8 @@ import { IProduct } from "@/models/Product";
 import CartDrawer from "./CartDrawer";
 
 export default function AddToCartButton({ product }: { product: IProduct }) {
-  const { addToCart } = useCart();
-  const [open, setOpen] = useState(false);
+  const { addToCart, setIsCartOpen } = useCart();
+  // const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -20,13 +20,13 @@ export default function AddToCartButton({ product }: { product: IProduct }) {
             price: product.price,
             image: product.image,
           });
-          setOpen(true);
+          setIsCartOpen(true);
         }}
         className="bg-amber-800 text-white px-6 py-3 rounded-full text-lg shadow hover:bg-amber-900 transition"
       >
         + Add to Cart
       </button>
-      <CartDrawer open={open} onClose={() => setOpen(false)} />
+      <CartDrawer />
     </>
   );
 }
