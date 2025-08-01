@@ -1,22 +1,26 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
 import { X, Trash2 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { useNavStore } from "@/lib/stores/navStore";
+import { useCartStore } from "@/lib/stores/cartStore";
+import { useCartTotal } from "@/lib/stores/cartStore";
 
 export default function CartDrawer() {
   const {
     isCartOpen,
     setIsCartOpen,
     cart,
-    total,
     addToCart,
     removeFromCart,
     updateQuantity,
-  } = useCart();
+  } = useCartStore();
+  const total = useCartTotal();
+
+  const toggleMenu = useNavStore((state) => state.toggleMenu);
 
   const drawerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -39,7 +43,9 @@ export default function CartDrawer() {
       >
         {/* Header */}
         <div className="px-6 py-4 border-b border-white/10 flex justify-between items-center">
-          <h2 className="text-2xl font-black tracking-tighter uppercase">Your Cart</h2>
+          <h2 className="text-2xl font-black tracking-tighter uppercase">
+            Your Cart
+          </h2>
           <button
             onClick={() => setIsCartOpen(false)}
             className="hover:text-red-500 transition"
@@ -68,7 +74,13 @@ export default function CartDrawer() {
                 <div className="flex-1 space-y-1">
                   <div className="flex justify-between items-start">
                     <div>
-                      <Link href={`/products/${item.slug}`}>
+                      <Link
+                        href={`/products/${item.slug}`}
+                        onClick={() => {
+                          setIsCartOpen(false);
+                          toggleMenu(false);
+                        }}
+                      >
                         <p className="font-semibold text-white hover:underline">
                           {item.title}
                         </p>
@@ -122,9 +134,7 @@ export default function CartDrawer() {
         {/* Footer */}
         {cart.length > 0 && (
           <div className="px-6 py-6 border-t border-white/10 space-y-4">
-            <p className="text-lg font-semibold">
-              Total: ${total.toFixed(2)}
-            </p>
+            <p className="text-lg font-semibold">Total: ${total.toFixed(2)}</p>
             <button
               onClick={() => {
                 router.push("/cart");

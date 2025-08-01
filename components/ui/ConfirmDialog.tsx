@@ -67,7 +67,7 @@ export default function ConfirmDialog({
                       onConfirm();
                       onClose();
                     }}
-                    className="px-4 py-2 text-sm rounded-md bg-amber-800 text-white hover:bg-amber-900 transition"
+                    className="px-4 py-2 text-sm rounded-md bg-zinc-800 hover:bg-zinc-700 text-white font-bold transition"
                   >
                     Confirm
                   </button>

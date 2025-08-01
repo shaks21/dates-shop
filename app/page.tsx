@@ -27,7 +27,7 @@ export default function HomePage() {
       {/* Main Content */}
       <main className="pt-5">
         {/* Hero Section */}
-        <section className="px-6 py-20 text-center">
+        <section className="px-6 py-10 text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-8 uppercase">
               ORGANIC
@@ -45,11 +45,11 @@ export default function HomePage() {
         <section id="products" className="px-6">
           <div className="w-full mx-auto">
             {/* Section Header */}
-            <div className="mb-16 text-center">
+            <div className=" text-center">
               <h2 className="text-3xl md:text-4xl font-black tracking-tighter uppercase mb-4">
-                Collection
+                OUR Collection
               </h2>
-              <hr className="w-full h-px border-white/20 my-12" />
+              <hr className="w-full h-px border-white/20 mt-12" />
             </div>
 
             {/* Products Grid as List */}
@@ -107,16 +107,18 @@ export default function HomePage() {
             </div>
 
             {/* Load More */}
-            <div className="text-center mt-16 mb-20">
-              <button className="text-lg font-light tracking-wider hover:opacity-70 transition-opacity border-b border-white/30 pb-1">
+            <div className="text-center mt-10 mb-10">
+              <Link href="/products">
+              <button className="cursor-pointer text-lg font-light tracking-wider hover:opacity-70 transition-opacity border-b border-white/30 pb-1">
                 And More...
               </button>
+              </Link>
             </div>
           </div>
         </section>
 
         {/* About Section */}
-        <section id="about" className="px-6 py-20 bg-white/5">
+        <section id="about" className="px-6 py-10 bg-white/5">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-12">
               Our Story
@@ -131,7 +133,7 @@ export default function HomePage() {
         </section>
 
         {/* Features */}
-        <section className="px-6 py-20">
+        <section className="px-6 py-10">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
@@ -171,9 +173,9 @@ export default function HomePage() {
         </section>
 
         {/* Testimonials */}
-        <section id="testimonials" className="px-6 py-20 bg-white/5">
+        <section id="testimonials" className="px-6 py-10 bg-white/5">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-center mb-10">
               Testimonials
             </h2>
             <div className="space-y-12">

@@ -1,12 +1,12 @@
 // components/AddToCartButton.tsx
 "use client";
 import { useState } from "react";
-import { useCart } from "@/context/CartContext";
+import { useCartStore } from "@/lib/stores/cartStore";
 import { IProduct } from "@/models/Product";
 import CartDrawer from "./CartDrawer";
 
 export default function AddToCartButton({ product }: { product: IProduct }) {
-  const { addToCart, setIsCartOpen } = useCart();
+  const { addToCart, setIsCartOpen } = useCartStore();
   // const [open, setOpen] = useState(false);
 
   return (
@@ -22,10 +22,11 @@ export default function AddToCartButton({ product }: { product: IProduct }) {
           });
           setIsCartOpen(true);
         }}
-        className="bg-amber-800 text-white px-6 py-3 rounded-full text-lg shadow hover:bg-amber-900 transition"
+        className="bg-white text-black font-black uppercase tracking-wide px-8 py-4 rounded-2xl text-base shadow-xl hover:bg-zinc-100 transition-colors duration-200 cursor-pointer"
       >
         + Add to Cart
       </button>
+
       <CartDrawer />
     </>
   );

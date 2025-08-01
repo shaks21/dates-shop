@@ -1,6 +1,6 @@
 // components/CartButton.tsx
 "use client";
-import { useCart } from "@/context/CartContext";
+import { useCartStore } from "@/lib/stores/cartStore";
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import CartDrawer from "./CartDrawer";
@@ -10,7 +10,7 @@ type CartButtonProps = {
 };
 
 export default function CartButton({ mobile = false }: CartButtonProps) {
-  const { cart, isCartOpen, setIsCartOpen } = useCart();
+  const { cart, isCartOpen, setIsCartOpen } = useCartStore();
   // const [open, setOpen] = useState(false);
 
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);

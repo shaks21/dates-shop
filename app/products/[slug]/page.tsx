@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import Link from "next/link";
 import Image from "next/image";
+import RelatedProducts from "@/components/RelatedProducts";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -24,74 +25,82 @@ export default async function ProductPage({ params }: ProductPageProps) {
   };
 
   return (
-    <div className="min-h-screen font-sans bg-gradient-to-b from-amber-50 to-white text-stone-800 px-4 py-12">
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow p-6 md:p-10">
-        {/* Back to Shop */}
-        <div className="mb-6">
-          <Link
-            href="/#products"
-            className="text-amber-700 hover:underline text-sm"
-          >
-            ← Back to Shop
-          </Link>
-        </div>
+    <div className="min-h-screen bg-black text-white font-sans px-4 py-12 lg:px-16">
+      {/* Grid: Product + Sidebar */}
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-10 max-w-7xl mx-auto">
+        {/* Product Content */}
+        <div className="bg-zinc-900 bg-opacity-80 rounded-xl shadow-lg p-6 md:p-10">
+          {/* Back Link */}
+          <div className="mb-6">
+            <Link
+              href="/#products"
+              className="text-white hover:underline text-sm font-mono uppercase tracking-wide"
+            >
+              ← Back to Shop
+            </Link>
+          </div>
 
-        {/* Main Product Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Image
-            src={`/${plainProduct.image}`}
-            className="w-full h-80 object-cover rounded-lg shadow-sm"
-            width={400}
-            height={300}
-            alt={plainProduct.title}
-          />
-          <div className="flex flex-col justify-center">
-            <h1 className="text-4xl font-serif font-bold text-amber-900 mb-4">
-              {plainProduct.title}
-            </h1>
-            <p className="text-stone-700 text-md mb-6 leading-relaxed">
-              {plainProduct.description}
-            </p>
-            <p className="text-2xl font-bold text-amber-700 mb-6">
-              ${(plainProduct.price / 100).toFixed(2)}
-            </p>
-            <div>
+          {/* Product Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <Image
+              src={`/${plainProduct.image}`}
+              alt={plainProduct.title}
+              width={400}
+              height={300}
+              className="w-full h-80 object-cover rounded-lg shadow-md border border-white/20"
+            />
+            <div className="flex flex-col justify-center space-y-6">
+              <h1 className="text-5xl md:text-6xl font-black uppercase tracking-tight">
+                {plainProduct.title}
+              </h1>
+              <p className="text-stone-300 text-lg leading-relaxed">
+                {plainProduct.description}
+              </p>
+              <p className="text-3xl font-extrabold">${(plainProduct.price / 100).toFixed(2)}</p>
               <AddToCartButton product={plainProduct} />
             </div>
           </div>
-        </div>
 
-        {/* Nutrition Info */}
-        <div className="mt-10">
-          <h2 className="text-xl font-semibold mb-3 text-amber-800">
-            Nutritional Information
-          </h2>
-          <ul className="list-disc list-inside text-sm text-stone-600 space-y-1">
-            <li>High in dietary fiber and antioxidants</li>
-            <li>Rich in potassium, magnesium, and iron</li>
-            <li>No added sugars or preservatives</li>
-            <li>100% organic and sun-dried</li>
-          </ul>
-        </div>
+          {/* Nutrition Section */}
+          <section className="mt-12">
+            <h2 className="text-3xl font-black uppercase tracking-wide mb-4">
+              Nutritional Information
+            </h2>
+            <ul className="list-disc list-inside text-stone-400 space-y-1 text-base">
+              <li>High in dietary fiber and antioxidants</li>
+              <li>Rich in potassium, magnesium, and iron</li>
+              <li>No added sugars or preservatives</li>
+              <li>100% organic and sun-dried</li>
+            </ul>
+          </section>
 
-        {/* Customer Reviews */}
-        <div className="mt-10">
-          <h2 className="text-xl font-semibold mb-3 text-amber-800">
-            Customer Reviews
-          </h2>
-          <div className="space-y-4 text-sm text-stone-700">
-            <div className="border-l-4 border-amber-500 pl-4">
-              <p>
+          {/* Reviews */}
+          <section className="mt-12">
+            <h2 className="text-3xl font-black uppercase tracking-wide mb-6">
+              Customer Reviews
+            </h2>
+            <div className="space-y-6 text-stone-300 text-base">
+              <blockquote className="border-l-4 border-white/20 pl-5 italic">
                 “Best Ajwa dates I&apos;ve ever had. Authentic and flavorful!”
-              </p>
-              <span className="text-xs text-stone-500">— Fatima A.</span>
+                <footer className="mt-2 text-stone-500 text-xs">— Fatima A.</footer>
+              </blockquote>
+              <blockquote className="border-l-4 border-white/20 pl-5 italic">
+                “Came beautifully packaged. Will buy again!”
+                <footer className="mt-2 text-stone-500 text-xs">— Omar K.</footer>
+              </blockquote>
             </div>
-            <div className="border-l-4 border-amber-500 pl-4">
-              <p>“Came beautifully packaged. Will buy again!”</p>
-              <span className="text-xs text-stone-500">— Omar K.</span>
-            </div>
+          </section>
+
+          {/* Related Products (mobile) */}
+          <div className="mt-16 block lg:hidden">
+            <RelatedProducts currentSlug={plainProduct.slug} />
           </div>
         </div>
+
+        {/* Related Products Sidebar (desktop only) */}
+        <aside className="hidden lg:block">
+          <RelatedProducts currentSlug={plainProduct.slug} />
+        </aside>
       </div>
     </div>
   );

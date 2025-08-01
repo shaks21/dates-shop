@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 
-type Props = {
-  total: number;
+type CartItem = {
+  slug: string;
+  quantity: number;
 };
 
-export default function CheckoutButton({ total }: Props) {
+type Props = {
+  items: CartItem[];
+};
+
+export default function CheckoutButton({ items }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleCheckout = async () => {
@@ -14,17 +19,15 @@ export default function CheckoutButton({ total }: Props) {
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ total }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items }), // send entire cart items array
       });
 
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert("Something went wrong.");
+        alert(data.message || "Something went wrong.");
       }
     } catch (err) {
       console.error(err);
@@ -37,10 +40,10 @@ export default function CheckoutButton({ total }: Props) {
   return (
     <button
       onClick={handleCheckout}
-      disabled={loading}
-      className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition"
+      disabled={loading || items.length === 0}
+      className="w-full sm:w-auto bg-zinc-800 hover:bg-zinc-700 text-white font-black uppercase rounded-2xl shadow-md px-6 py-3 transition"
     >
-      {loading ? "Processing..." : "Buy Now"}
+      {loading ? "Processing..." : "Checkout"}
     </button>
   );
 }
