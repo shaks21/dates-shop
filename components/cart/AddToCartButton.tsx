@@ -1,6 +1,5 @@
 // components/AddToCartButton.tsx
 "use client";
-import { useState } from "react";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { IProduct } from "@/models/Product";
 import CartDrawer from "./CartDrawer";

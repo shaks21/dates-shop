@@ -1,7 +1,7 @@
 "use client";
 
 import { X, Trash2 } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +14,6 @@ export default function CartDrawer() {
     isCartOpen,
     setIsCartOpen,
     cart,
-    addToCart,
     removeFromCart,
     updateQuantity,
   } = useCartStore();

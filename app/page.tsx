@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
 
 type Product = {
   _id: string;
@@ -193,7 +193,7 @@ export default function HomePage() {
               ].map((testimonial, index) => (
                 <div key={index} className="text-center">
                   <blockquote className="text-xl md:text-2xl font-light italic mb-4 opacity-90">
-                    "{testimonial.quote}"
+                    &quot;{testimonial.quote}&quot;
                   </blockquote>
                   <cite className="text-sm font-mono opacity-60 not-italic">
                     — {testimonial.author}

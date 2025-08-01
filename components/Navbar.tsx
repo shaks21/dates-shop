@@ -1,14 +1,11 @@
 // components/Navbar.tsx
 "use client";
-import { useState } from "react";
 import Link from "next/link";
 import CartButton from "./cart/CartButton";
-import { useCartStore } from "@/lib/stores/cartStore";
 import { useNavStore } from "@/lib/stores/navStore";
 
 export default function Navbar() {
   // const [isOpen, setIsOpen] = useState(false);
-  const { isCartOpen } = useCartStore();
   const isOpen = useNavStore((state) => state.isMenuOpen);
   const toggleMenu = useNavStore((state) => state.toggleMenu);
   // if (isCartOpen) return null; // Don't render when cart is open

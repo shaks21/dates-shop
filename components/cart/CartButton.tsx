@@ -2,7 +2,6 @@
 "use client";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { ShoppingCart } from "lucide-react";
-import { useState } from "react";
 import CartDrawer from "./CartDrawer";
 
 type CartButtonProps = {
