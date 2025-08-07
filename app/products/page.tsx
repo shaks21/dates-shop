@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 interface Product {
   _id: string;
@@ -19,7 +20,9 @@ const PAGE_SIZE = 9;
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [search, setSearch] = useState("");
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams?.get("search") || "";
+  const [search, setSearch] = useState(initialSearch);
   const [filtered, setFiltered] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<SortOption>("title-asc");
@@ -32,6 +35,12 @@ export default function ProductsPage() {
         setProducts(data);
       });
   }, []);
+
+  // Sync the `search` state with URL query param
+  useEffect(() => {
+    const newSearch = searchParams?.get("search") || "";
+    setSearch(newSearch);
+  }, [searchParams]);
 
   // Filter and sort products when search, products, or sort changes
   useEffect(() => {

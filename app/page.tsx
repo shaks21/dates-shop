@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-// import Image from "next/image";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import "./globals.css";
 
 type Product = {
   _id: string;
@@ -12,218 +14,378 @@ type Product = {
   image: string;
 };
 
-export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [bgImage, setBgImage] = useState("");
+// Fade-in animation wrapper
+const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+  const controls = useAnimation();
+  const { ref, inView } = useInView();
 
   useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    }
+  }, [inView, controls]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        visible: { opacity: 1, y: 0 },
+        hidden: { opacity: 0, y: 30 },
+      }}
+      transition={{ duration: 0.6, delay }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+export default function HomePage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [dark, setDark] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  const images = ["/hero1.jpg", "/hero2.jpg", "/hero3.jpg"];
+
+  useEffect(() => {
+    setLoaded(true);
     fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
       .then(setProducts);
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
+    <div
+      className={`min-h-screen font-sans transition-colors duration-500 ${
+        dark ? "bg-gray-900 text-gray-100" : "bg-cream text-gray-900"
+      }`}
+    >
+      {/* Loading Animation */}
+      {!loaded && (
+        <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="text-2xl font-light text-amber-800 tracking-wide"
+          >
+            Organic Dates Co.
+          </motion.div>
+        </div>
+      )}
+
+
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={() => setDark(!dark)}
+        className="fixed top-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-800 hover:bg-amber-50 dark:bg-gray-800 dark:text-amber-200 transition-colors"
+        aria-label="Toggle dark mode"
+      >
+        {dark ? "☀️" : "🌙"}
+      </button>
+
       {/* Main Content */}
-      <main className="pt-5">
+      <main className="pt-20 relative">
         {/* Hero Section */}
-        <section className="px-6 py-10 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-8 uppercase">
-              ORGANIC
-              <br />
-              DATES
-            </h1>
-            <hr className="border-white/20 my-12" />
-            <p className="text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto opacity-80">
-              Premium sun-ripened dates delivered fresh from the oasis
-            </p>
-          </div>
+        <section id="home" className="py-16 md:py-24 text-center px-6">
+          <FadeIn>
+            <div className="relative max-w-5xl mx-auto rounded-lg overflow-hidden shadow-2xl">
+              <AlternatingImages images={images} dark={dark} />
+              <div
+                className={`absolute inset-0 flex flex-col items-center justify-center text-white text-shadow-md p-8 ${
+                  dark ? "bg-black/40" : "bg-black/30"
+                }`}
+              >
+                <h1 className="text-4xl md:text-6xl font-light tracking-wide mb-4">
+                  Nature Refined
+                </h1>
+                <p className="text-lg md:text-xl max-w-xl mx-auto opacity-90">
+                  Hand-harvested. Sun-ripened. Crafted with care.
+                </p>
+              </div>
+            </div>
+          </FadeIn>
         </section>
+
+        {/* Signature Product Spotlight */}
+        <FadeIn>
+          <section className="py-20 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-gray-800 dark:to-gray-900">
+            <div className="max-w-6xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <span className="text-sm uppercase tracking-wider text-amber-700 dark:text-amber-400 font-medium">
+                  Signature Collection
+                </span>
+                <h2 className="text-4xl md:text-5xl font-light mt-2 mb-4 text-gray-800 dark:text-white">
+                  Medjool Majesty
+                </h2>
+                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                  Our most prized Medjool dates, hand-selected for their buttery texture and deep caramel sweetness. 
+                  Sourced from a single orchard in the Jordan Valley.
+                </p>
+                <div className="flex flex-wrap gap-3 mb-6">
+                  <span className="text-xs uppercase tracking-wider px-3 py-1 bg-amber-600 text-white rounded-full">
+                    Organic
+                  </span>
+                  <span className="text-xs uppercase tracking-wider px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-300">
+                    Limited Batch
+                  </span>
+                </div>
+                <Link href="/products/medjool-majesty">
+                  <button className="px-8 py-3 bg-gray-900 text-white text-sm uppercase tracking-wider hover:bg-amber-700 transition-all duration-300 rounded-none">
+                    Discover
+                  </button>
+                </Link>
+              </div>
+              <div className="relative">
+                <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                  <img
+                    src="/medjool-hero.jpg"
+                    alt="Medjool Majesty"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center">
+                  <span className="text-amber-800 dark:text-amber-200 font-bold text-xl">✨</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </FadeIn>
 
         {/* Products List */}
-        <section id="products" className="px-6">
-          <div className="w-full mx-auto">
-            {/* Section Header */}
-            <div className=" text-center">
-              <h2 className="text-3xl md:text-4xl font-black tracking-tighter uppercase mb-4">
-                OUR Collection
-              </h2>
-              <hr className="w-full h-px border-white/20 mt-12" />
-            </div>
+        <FadeIn>
+          <section id="products" className="px-6 py-16">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-light tracking-wide text-gray-800 dark:text-white mb-6">
+                  OUR COLLECTION
+                </h2>
+                <div className="w-16 h-px bg-amber-600 mx-auto"></div>
+              </div>
 
-            {/* Products Grid as List */}
-            <div
-              className="space-y-0 transition-all"
-              style={{
-                backgroundImage: bgImage ? `url(${bgImage})` : "none",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              {products.map((product, index) => (
-                <Link
-                  key={product._id}
-                  href={`/products/${product.slug}`}
-                  className="block group relative overflow-hidden"
-                  onMouseEnter={() => setBgImage(product.image)}
-                  onMouseLeave={() => setBgImage("")}
-                >
-                  {/* Optional: faded overlay */}
-                  <div className="relative z-10 group cursor-pointer border-b border-white/70  bg-black/10">
-                    <div className="flex items-center justify-between py-4 md:py-6">
-                      {/* Number */}
-                      <div className="text-sm font-mono w-12 px-10">
-                        {String(index + 1)}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {products.slice(0, 6).map((product, index) => (
+                  <Link
+                    key={product._id}
+                    href={`/products/${product.slug}`}
+                    className="block group"
+                  >
+                    <div
+                      className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-none overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group-hover:border-amber-600 transform hover:-translate-y-1`}
+                    >
+                      <div
+                        className="aspect-square bg-gray-100 dark:bg-gray-700 relative overflow-hidden"
+                        style={{
+                          backgroundImage: product.image
+                            ? `url(${product.image})`
+                            : "none",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="hover-overlay"></div>
                       </div>
 
-                      {/* Product Name */}
-                      <div className="flex-1 text-center px-8 min-h-[3.5rem] md:min-h-[5rem] lg:min-h-[6rem]">
-                        {" "}
-                        {/* Fixed height */}
-                        <h3
-                          className="text-[1.5rem] md:text-[2.25rem] lg:text-[3rem] font-black tracking-tighter uppercase
-                   transition-[font-size,color] duration-300 ease-in-out
-                   group-hover:text-transparent 
-                   group-hover:[-webkit-text-stroke:1px_white] 
-                   group-hover:[text-stroke:1px_black]
-                   group-hover:text-[1.4rem] md:group-hover:text-[2.15rem] lg:group-hover:text-[2.8rem]"
-                        >
+                      <div className="p-6 text-center">
+                        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3 group-hover:text-amber-700 transition-colors duration-300">
                           {product.title}
                         </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                          {product.description}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-lg font-light text-gray-800 dark:text-white">
+                            ${(product.price / 100).toFixed(2)}
+                          </span>
+                          <button className="text-xs uppercase tracking-wider text-amber-700 border border-amber-700 px-4 py-2 hover:bg-amber-700 hover:text-white transition-all duration-300 rounded-none">
+                            View
+                          </button>
+                        </div>
                       </div>
-
-                      {/* Price */}
-                      {/* <div className="text-right">
-                        <span className="text-xl md:text-2xl font-mono">
-                          ${(product.price / 100).toFixed(2)}
-                        </span>
-                      </div> */}
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  </Link>
+                ))}
+              </div>
 
-            {/* Load More */}
-            <div className="text-center mt-10 mb-10">
-              <Link href="/products">
-              <button className="cursor-pointer text-lg font-light tracking-wider hover:opacity-70 transition-opacity border-b border-white/30 pb-1">
-                And More...
-              </button>
-              </Link>
+              <div className="text-center mt-16">
+                <Link href="/products">
+                  <button
+                    className={`text-sm uppercase tracking-wider border-b pb-1 transition-all duration-300 ${
+                      dark
+                        ? "text-gray-300 hover:text-amber-400 hover:border-amber-500"
+                        : "text-gray-700 hover:text-amber-700 hover:border-amber-600"
+                    }`}
+                  >
+                    View All Products
+                  </button>
+                </Link>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </FadeIn>
 
         {/* About Section */}
-        <section id="about" className="px-6 py-10 bg-white/5">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-12">
-              Our Story
-            </h2>
-            <hr className="w-full h-px border-white/20 my-12" />
-            <p className="text-lg md:text-xl font-light leading-relaxed opacity-80 max-w-3xl mx-auto">
-              At Organic Dates Co., we are passionate about quality and
-              sustainability. Our dates are hand-picked at peak ripeness,
-              cultivated with care, and never treated with chemicals.
-            </p>
-          </div>
-        </section>
+        <FadeIn>
+          <section id="our-story" className="px-6 py-16 bg-amber-50 dark:bg-gray-800">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-light text-gray-800 dark:text-white mb-8">
+                OUR STORY
+              </h2>
+              <div className="w-16 h-px bg-amber-600 mx-auto mb-8"></div>
+              <p className="text-base md:text-lg font-light leading-relaxed text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                At Organic Dates Co., we are passionate about quality and sustainability. 
+                Our dates are hand-picked at peak ripeness, cultivated with care, and never treated with chemicals. 
+                Each date represents our commitment to excellence and traditional craftsmanship.
+              </p>
+            </div>
+          </section>
+        </FadeIn>
 
-        {/* Features */}
-        <section className="px-6 py-10">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Origin Story Timeline */}
+        <FadeIn>
+          <section id="origin" className="py-20 px-6">
+            <div className="max-w-5xl mx-auto text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-light text-gray-800 dark:text-white mb-4">
+                From Tree to Table
+              </h2>
+              <div className="w-16 h-px bg-amber-600 mx-auto mb-6"></div>
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                A journey of care, tradition, and nature’s rhythm.
+              </p>
+            </div>
+
+            <div className="space-y-16">
               {[
-                {
-                  number: "01",
-                  label: "100% Organic",
-                  desc: "Pure and natural",
-                },
-                {
-                  number: "02",
-                  label: "Sun-Ripened",
-                  desc: "Perfect sweetness",
-                },
-                {
-                  number: "03",
-                  label: "Eco-Friendly",
-                  desc: "Sustainable delivery",
-                },
-                {
-                  number: "04",
-                  label: "Premium Grade",
-                  desc: "Highest quality",
-                },
-              ].map(({ number, label, desc }) => (
-                <div key={number} className="text-center group">
-                  <div className="text-6xl font-black opacity-20 mb-4">
-                    {number}
+                { step: "Harvest", desc: "Hand-picked at dawn for peak freshness", img: "/harvest.jpg" },
+                { step: "Clean", desc: "Naturally washed and sun-dried", img: "/clean.jpg" },
+                { step: "Inspect", desc: "Each date hand-checked for quality", img: "/inspect.jpg" },
+                { step: "Pack", desc: "Eco-packaged with care", img: "/pack.jpg" },
+              ].map((stage, i) => (
+                <FadeIn key={i} delay={i * 0.2}>
+                  <div
+                    className={`flex flex-col md:flex-row items-center gap-10 ${
+                      i % 2 === 1 ? "md:flex-row-reverse" : ""
+                    }`}
+                  >
+                    <div className="md:w-1/2">
+                      <h3 className="text-2xl font-light text-gray-800 dark:text-white mb-3">
+                        {stage.step}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                        {stage.desc}
+                      </p>
+                    </div>
+                    <div className="md:w-1/2">
+                      <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden shadow-md">
+                        <img
+                          src={stage.img}
+                          alt={stage.step}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold tracking-wider uppercase mb-2">
-                    {label}
-                  </h3>
-                  <p className="text-sm opacity-70 font-light">{desc}</p>
-                </div>
+                </FadeIn>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
+        </FadeIn>
 
         {/* Testimonials */}
-        <section id="testimonials" className="px-6 py-10 bg-white/5">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase text-center mb-10">
-              Testimonials
-            </h2>
-            <div className="space-y-12">
-              {[
-                {
-                  quote:
-                    "Absolutely divine! The dates are soft, juicy, and so flavorful.",
-                  author: "Aisha K.",
-                },
-                {
-                  quote:
-                    "These are a staple in our home now. You can taste the quality!",
-                  author: "Omar R.",
-                },
-              ].map((testimonial, index) => (
-                <div key={index} className="text-center">
-                  <blockquote className="text-xl md:text-2xl font-light italic mb-4 opacity-90">
-                    &quot;{testimonial.quote}&quot;
-                  </blockquote>
-                  <cite className="text-sm font-mono opacity-60 not-italic">
-                    — {testimonial.author}
-                  </cite>
-                  {index === 0 && (
-                    <hr className="w-32 h-px border-white/20 mx-auto mt-12" />
-                  )}
-                </div>
-              ))}
+        <FadeIn>
+          <section className="py-20 bg-white dark:bg-gray-900">
+            <div className="max-w-4xl mx-auto px-6 text-center">
+              <h2 className="text-3xl font-light text-gray-800 dark:text-white mb-4">
+                What Our Customers Say
+              </h2>
+              <div className="w-16 h-px bg-amber-600 mx-auto mb-12"></div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  { quote: "The finest dates I’ve ever tasted. Like dessert from the earth.", name: "Claire M., Paris" },
+                  { quote: "Luxurious texture and sweetness. My pantry staple.", name: "James L., New York" },
+                  { quote: "Beautiful packaging. Perfect for gifting.", name: "Sofia R., Milan" },
+                ].map((t, i) => (
+                  <FadeIn key={i} delay={i * 0.1}>
+                    <div
+                      className={`p-6 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300 bg-amber-50/30 dark:bg-gray-800 rounded-none`}
+                    >
+                      <p className="italic text-gray-700 dark:text-gray-300 mb-4">"{t.quote}"</p>
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200">— {t.name}</p>
+                    </div>
+                  </FadeIn>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </FadeIn>
+
+        {/* Gift CTA */}
+        <FadeIn>
+          <section className="py-20 px-6 bg-gradient-to-r from-amber-900 to-yellow-800 text-white">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-light mb-4">Curated Gift Boxes</h2>
+              <p className="text-amber-100 mb-8 text-lg">
+                Perfect for weddings, holidays, or moments that matter.
+              </p>
+              <Link href="/gifts">
+                <button className="px-8 py-3 bg-white text-amber-900 text-sm uppercase tracking-wider hover:bg-gray-100 transition-all rounded-none">
+                  Explore Gifts
+                </button>
+              </Link>
+            </div>
+          </section>
+        </FadeIn>
       </main>
 
       {/* Footer */}
-      <footer className="px-6 py-12 border-t border-white/10">
+      <footer className="px-6 py-12 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
         <div className="max-w-6xl mx-auto text-center">
-          <small className="text-sm font-mono opacity-50 mb-4">
-            © {new Date().getFullYear()}, Organic Dates Co., All Rights
-            Reserved.
+          <small className="text-xs text-gray-500 dark:text-gray-400 mb-4 block tracking-wide">
+            © {new Date().getFullYear()}, Organic Dates Co. All Rights Reserved.
           </small>
-          <br />
           <Link
             href="/privacy"
-            className="text-sm hover:opacity-70 transition-opacity border-b border-white/30 pb-1"
+            className="text-xs text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 border-b border-gray-300 dark:border-gray-700 pb-1"
           >
             Privacy Policy
           </Link>
         </div>
       </footer>
+    </div>
+  );
+}
+
+// AlternatingImages Component (add this inside the same file or move to components/)
+function AlternatingImages({ images, dark = false }: { images: string[]; dark?: boolean }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div className="relative w-full h-80 md:h-96 lg:h-[500px]">
+      {images.map((src, i) => (
+        <div
+          key={i}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            i === currentIndex ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <img
+            src={src}
+            alt={`Hero ${i + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ))}
+      {/* Gradient overlay */}
+      <div className={`absolute inset-0 ${dark ? "bg-black/40" : "bg-black/20"}`}></div>
     </div>
   );
 }

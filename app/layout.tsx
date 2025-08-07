@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+
 // import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         {/* <CartProvider> */}
           <Navbar />
-          <main className="pt-4">{children}</main>
+          <main className="pt-[100px]">{children}</main> {/* Match the navbar height */}
            <CartDrawer />
         {/* </CartProvider> */}
       </body>

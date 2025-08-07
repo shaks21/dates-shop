@@ -19,7 +19,7 @@ export default function CartButton({ mobile = false }: CartButtonProps) {
 
       <button
         onClick={() => setIsCartOpen(!isCartOpen)}
-        className={`relative hover:cursor-pointer ${
+        className={`relative hover:cursor-pointer hover:opacity-70 ${
           mobile ? "flex items-center gap-2 text-2xl" : ""
         }`}
       >
@@ -36,7 +36,7 @@ export default function CartButton({ mobile = false }: CartButtonProps) {
         {mobile && <span>Cart ({count})</span>}
       </button>
       {/* <CartDrawer open={open} onClose={() => setOpen(false)} /> */}
-      <CartDrawer />
+      {/* <CartDrawer /> */}
     </>
   );
 }
