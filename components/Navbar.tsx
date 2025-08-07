@@ -25,17 +25,15 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 w-full border-t-1  border-t-black z-50 transition-all duration-300 ${
-        scrolled
-          ? "py-1 bg-[color:var(--color-gold)] shadow-md shadow-black/50"
-          : "py-2 bg-[color:var(--color-gold)]"
+      className={`fixed top-0 w-full bg-gradient-to-r from-amber-400 to-[gold] border-t-1  border-t-black z-50 transition-all duration-300 ${
+        scrolled ? "pt-1 shadow-md shadow-black/50" : " pt-2"
       }`}
     >
       <nav className="flex flex-col items-center">
         {/* Top Banner with Slogan & Cart */}
         <div className="relative w-full py-1 border-b-1 border-b-black flex items-center justify-center">
           {/* Centered text */}
-          <span className="text-center font-semibold italic">
+          <span className="text-center  italic">
             Nature&apos;s Finest. Delivered with Elegance.
           </span>
 
@@ -57,7 +55,7 @@ export default function Navbar() {
             <Image
               src="/logo.png"
               alt="DateASuperfood Logo"
-              width={scrolled ? 100 : 150} // shrink width
+              width={scrolled ? 70 : 120} // shrink width
               height={scrolled ? 80 : 120}
               className="object-contain rounded-lg transition-all duration-300"
             />

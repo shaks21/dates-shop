@@ -4,6 +4,8 @@ import Link from "next/link";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import "./globals.css";
+import AlternatingImages from "@/components/AlternatingImages";
+import Image from "next/image";
 
 type Product = {
   _id: string;
@@ -15,7 +17,13 @@ type Product = {
 };
 
 // Fade-in animation wrapper
-const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+const FadeIn = ({
+  children,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+}) => {
   const controls = useAnimation();
   const { ref, inView } = useInView();
 
@@ -75,35 +83,36 @@ export default function HomePage() {
         </div>
       )}
 
-
       {/* Dark Mode Toggle */}
-      <button
+      {/* <button
         onClick={() => setDark(!dark)}
         className="fixed top-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-800 hover:bg-amber-50 dark:bg-gray-800 dark:text-amber-200 transition-colors"
         aria-label="Toggle dark mode"
       >
         {dark ? "☀️" : "🌙"}
-      </button>
+      </button> */}
 
       {/* Main Content */}
       <main className="pt-20 relative">
         {/* Hero Section */}
-        <section id="home" className="py-16 md:py-24 text-center px-6">
+        <section id="home" className="py-6 md:py-10 text-center px-6">
           <FadeIn>
             <div className="relative max-w-5xl mx-auto rounded-lg overflow-hidden shadow-2xl">
-              <AlternatingImages images={images} dark={dark} />
-              <div
-                className={`absolute inset-0 flex flex-col items-center justify-center text-white text-shadow-md p-8 ${
-                  dark ? "bg-black/40" : "bg-black/30"
-                }`}
+              <AlternatingImages
+                images={images}
+                interval={6000}
+                dark={dark}
+                showIndicators={true}
+                className="shadow-2xl"
               >
+                {/* 👇 Hero text now lives INSIDE the carousel */}
                 <h1 className="text-4xl md:text-6xl font-light tracking-wide mb-4">
                   Nature Refined
                 </h1>
                 <p className="text-lg md:text-xl max-w-xl mx-auto opacity-90">
                   Hand-harvested. Sun-ripened. Crafted with care.
                 </p>
-              </div>
+              </AlternatingImages>
             </div>
           </FadeIn>
         </section>
@@ -117,11 +126,12 @@ export default function HomePage() {
                   Signature Collection
                 </span>
                 <h2 className="text-4xl md:text-5xl font-light mt-2 mb-4 text-gray-800 dark:text-white">
-                  Medjool Majesty
+                  Medjool Dates
                 </h2>
                 <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                  Our most prized Medjool dates, hand-selected for their buttery texture and deep caramel sweetness. 
-                  Sourced from a single orchard in the Jordan Valley.
+                  Our most prized Medjool dates, hand-selected for their buttery
+                  texture and deep caramel sweetness. Sourced from a single
+                  orchard in the Jordan Valley.
                 </p>
                 <div className="flex flex-wrap gap-3 mb-6">
                   <span className="text-xs uppercase tracking-wider px-3 py-1 bg-amber-600 text-white rounded-full">
@@ -131,7 +141,7 @@ export default function HomePage() {
                     Limited Batch
                   </span>
                 </div>
-                <Link href="/products/medjool-majesty">
+                <Link href="/products/medjool">
                   <button className="px-8 py-3 bg-gray-900 text-white text-sm uppercase tracking-wider hover:bg-amber-700 transition-all duration-300 rounded-none">
                     Discover
                   </button>
@@ -139,14 +149,18 @@ export default function HomePage() {
               </div>
               <div className="relative">
                 <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
-                  <img
-                    src="/medjool-hero.jpg"
-                    alt="Medjool Majesty"
+                  <Image
+                    src={"/medjool.jpg"}
+                    alt="Medjool Dates"
+                    width={400}
+                    height={300}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center">
-                  <span className="text-amber-800 dark:text-amber-200 font-bold text-xl">✨</span>
+                  <span className="text-amber-800 dark:text-amber-200 font-bold text-xl">
+                    ✨
+                  </span>
                 </div>
               </div>
             </div>
@@ -171,9 +185,8 @@ export default function HomePage() {
                     href={`/products/${product.slug}`}
                     className="block group"
                   >
-                    <div
-                      className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-none overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group-hover:border-amber-600 transform hover:-translate-y-1`}
-                    >
+                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-none overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group-hover:border-amber-700 transform hover:-translate-y-1 h-full flex flex-col">
+                      {/* Image Section */}
                       <div
                         className="aspect-square bg-gray-100 dark:bg-gray-700 relative overflow-hidden"
                         style={{
@@ -185,17 +198,25 @@ export default function HomePage() {
                         }}
                       >
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="hover-overlay"></div>
                       </div>
 
-                      <div className="p-6 text-center">
-                        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3 group-hover:text-amber-700 transition-colors duration-300">
+                      {/* Content Section */}
+                      <div className="p-6 text-center flex flex-col flex-grow">
+                        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3 group-hover:text-amber-700 transition-colors duration-300 line-clamp-1">
                           {product.title}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                        <p
+                          className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 flex-grow"
+                          style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                          }}
+                        >
                           {product.description}
                         </p>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between mt-auto">
                           <span className="text-lg font-light text-gray-800 dark:text-white">
                             ${(product.price / 100).toFixed(2)}
                           </span>
@@ -228,16 +249,21 @@ export default function HomePage() {
 
         {/* About Section */}
         <FadeIn>
-          <section id="our-story" className="px-6 py-16 bg-amber-50 dark:bg-gray-800">
+          <section
+            id="our-story"
+            className="px-6 py-16 bg-amber-50 dark:bg-gray-800"
+          >
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-light text-gray-800 dark:text-white mb-8">
                 OUR STORY
               </h2>
               <div className="w-16 h-px bg-amber-600 mx-auto mb-8"></div>
               <p className="text-base md:text-lg font-light leading-relaxed text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                At Organic Dates Co., we are passionate about quality and sustainability. 
-                Our dates are hand-picked at peak ripeness, cultivated with care, and never treated with chemicals. 
-                Each date represents our commitment to excellence and traditional craftsmanship.
+                At Organic Dates Co., we are passionate about quality and
+                sustainability. Our dates are hand-picked at peak ripeness,
+                cultivated with care, and never treated with chemicals. Each
+                date represents our commitment to excellence and traditional
+                craftsmanship.
               </p>
             </div>
           </section>
@@ -258,10 +284,26 @@ export default function HomePage() {
 
             <div className="space-y-16">
               {[
-                { step: "Harvest", desc: "Hand-picked at dawn for peak freshness", img: "/harvest.jpg" },
-                { step: "Clean", desc: "Naturally washed and sun-dried", img: "/clean.jpg" },
-                { step: "Inspect", desc: "Each date hand-checked for quality", img: "/inspect.jpg" },
-                { step: "Pack", desc: "Eco-packaged with care", img: "/pack.jpg" },
+                {
+                  step: "Harvest",
+                  desc: "Hand-picked at dawn for peak freshness",
+                  img: "/harvest.jpg",
+                },
+                {
+                  step: "Clean",
+                  desc: "Naturally washed and sun-dried",
+                  img: "/clean.jpg",
+                },
+                {
+                  step: "Inspect",
+                  desc: "Each date hand-checked for quality",
+                  img: "/inspect.jpg",
+                },
+                {
+                  step: "Pack",
+                  desc: "Eco-packaged with care",
+                  img: "/pack.jpg",
+                },
               ].map((stage, i) => (
                 <FadeIn key={i} delay={i * 0.2}>
                   <div
@@ -293,39 +335,13 @@ export default function HomePage() {
           </section>
         </FadeIn>
 
-        {/* Testimonials */}
-        <FadeIn>
-          <section className="py-20 bg-white dark:bg-gray-900">
-            <div className="max-w-4xl mx-auto px-6 text-center">
-              <h2 className="text-3xl font-light text-gray-800 dark:text-white mb-4">
-                What Our Customers Say
-              </h2>
-              <div className="w-16 h-px bg-amber-600 mx-auto mb-12"></div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                  { quote: "The finest dates I’ve ever tasted. Like dessert from the earth.", name: "Claire M., Paris" },
-                  { quote: "Luxurious texture and sweetness. My pantry staple.", name: "James L., New York" },
-                  { quote: "Beautiful packaging. Perfect for gifting.", name: "Sofia R., Milan" },
-                ].map((t, i) => (
-                  <FadeIn key={i} delay={i * 0.1}>
-                    <div
-                      className={`p-6 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow duration-300 bg-amber-50/30 dark:bg-gray-800 rounded-none`}
-                    >
-                      <p className="italic text-gray-700 dark:text-gray-300 mb-4">"{t.quote}"</p>
-                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200">— {t.name}</p>
-                    </div>
-                  </FadeIn>
-                ))}
-              </div>
-            </div>
-          </section>
-        </FadeIn>
-
         {/* Gift CTA */}
         <FadeIn>
           <section className="py-20 px-6 bg-gradient-to-r from-amber-900 to-yellow-800 text-white">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-light mb-4">Curated Gift Boxes</h2>
+              <h2 className="text-3xl md:text-4xl font-light mb-4">
+                Curated Gift Boxes
+              </h2>
               <p className="text-amber-100 mb-8 text-lg">
                 Perfect for weddings, holidays, or moments that matter.
               </p>
@@ -353,39 +369,6 @@ export default function HomePage() {
           </Link>
         </div>
       </footer>
-    </div>
-  );
-}
-
-// AlternatingImages Component (add this inside the same file or move to components/)
-function AlternatingImages({ images, dark = false }: { images: string[]; dark?: boolean }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [images.length]);
-
-  return (
-    <div className="relative w-full h-80 md:h-96 lg:h-[500px]">
-      {images.map((src, i) => (
-        <div
-          key={i}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            i === currentIndex ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <img
-            src={src}
-            alt={`Hero ${i + 1}`}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      ))}
-      {/* Gradient overlay */}
-      <div className={`absolute inset-0 ${dark ? "bg-black/40" : "bg-black/20"}`}></div>
     </div>
   );
 }
