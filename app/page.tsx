@@ -93,14 +93,14 @@ export default function HomePage() {
       </button> */}
 
       {/* Main Content */}
-      <main className="pt-20 relative">
+      <main className="md:pt-20 relative">
         {/* Hero Section */}
-        <section id="home" className="py-6 md:py-10 text-center px-6">
+        <section id="home" className="py-6 md:py-10 text-center ">
           <FadeIn>
-            <div className="relative max-w-5xl mx-auto rounded-lg overflow-hidden shadow-2xl">
+            <div className="relative w-full mx-auto overflow-hidden shadow-2xl">
               <AlternatingImages
                 images={images}
-                interval={6000}
+                interval={5000}
                 dark={dark}
                 showIndicators={true}
                 className="shadow-2xl"
@@ -307,11 +307,13 @@ export default function HomePage() {
               ].map((stage, i) => (
                 <FadeIn key={i} delay={i * 0.2}>
                   <div
-                    className={`flex flex-col md:flex-row items-center gap-10 ${
-                      i % 2 === 1 ? "md:flex-row-reverse" : ""
-                    }`}
+                    className={`flex w-full ${
+                      i % 2 === 1
+                        ? "flex-col md:flex-row-reverse"
+                        : "flex-col md:flex-row"
+                    } items-center gap-10`}
                   >
-                    <div className="md:w-1/2">
+                    <div className="w-full md:w-1/2 text-center">
                       <h3 className="text-2xl font-light text-gray-800 dark:text-white mb-3">
                         {stage.step}
                       </h3>
@@ -319,7 +321,8 @@ export default function HomePage() {
                         {stage.desc}
                       </p>
                     </div>
-                    <div className="md:w-1/2">
+
+                    <div className="w-full md:w-1/2">
                       <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden shadow-md">
                         <img
                           src={stage.img}
@@ -337,16 +340,16 @@ export default function HomePage() {
 
         {/* Gift CTA */}
         <FadeIn>
-          <section className="py-20 px-6 bg-gradient-to-r from-amber-900 to-yellow-800 text-white">
+          <section className="py-20 px-6 bg-gradient-to-r from-amber-400 to-[color:var(--color-navbar)] text-black">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-light mb-4">
                 Curated Gift Boxes
               </h2>
-              <p className="text-amber-100 mb-8 text-lg">
+              <p className="text-gray-900 mb-8 text-lg">
                 Perfect for weddings, holidays, or moments that matter.
               </p>
               <Link href="/gifts">
-                <button className="px-8 py-3 bg-white text-amber-900 text-sm uppercase tracking-wider hover:bg-gray-100 transition-all rounded-none">
+                <button className="px-8 py-3 border-2 border-black bg-white text-black text-sm uppercase tracking-wider hover:bg-gray-100 transition-all rounded-none">
                   Explore Gifts
                 </button>
               </Link>

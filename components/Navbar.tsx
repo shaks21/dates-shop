@@ -25,15 +25,26 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 w-full bg-gradient-to-r from-amber-400 to-[gold] border-t-1  border-t-black z-50 transition-all duration-300 ${
+      className={`fixed top-0 w-full bg-gradient-to-r from-amber-300 to-[color:var(--color-navbar)] border-t-1 border-t-black z-50 transition-all duration-300 ${
         scrolled ? "pt-1 shadow-md shadow-black/50" : " pt-2"
       }`}
     >
       <nav className="flex flex-col items-center">
         {/* Top Banner with Slogan & Cart */}
         <div className="relative w-full py-1 border-b-1 border-b-black flex items-center justify-center">
-          {/* Centered text */}
-          <span className="text-center  italic">
+          {/* Mobile: Show Logo */}
+          <div className="md:hidden flex items-center justify-center inset-0">
+            <Link href="/" aria-label="Home">
+              <Image
+                src="/logo.png"
+                alt="DateASuperfood Logo"
+                width={scrolled ? 60 : 80}
+                height={60}
+                className="object-contain transition-all duration-300 drop-shadow-sm"
+              />
+            </Link>
+          </div>
+          <span className="hidden md:block text-center italic">
             Nature&apos;s Finest. Delivered with Elegance.
           </span>
 
@@ -66,20 +77,20 @@ export default function Navbar() {
         <div className="hidden md:flex justify-center space-x-6 text-sm uppercase bg-white text-black w-full py-2">
           <Link
             href="/products"
-            className="hover:text-[color:var(--color-gold)]"
+            className="hover:text-[color:var(--color-navbar)]"
           >
             Shop
           </Link>
           <Link
             href="/#about"
-            className="hover:text-[color:var(--color-gold)] "
+            className="hover:text-[color:var(--color-navbar)] "
           >
             Our Story
           </Link>
 
           <Link
             href="/#footer"
-            className="hover:text-[color:var(--color-gold)]"
+            className="hover:text-[color:var(--color-navbar)]"
           >
             Contact Us
           </Link>

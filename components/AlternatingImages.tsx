@@ -37,7 +37,7 @@ export default function AlternatingImages({
   if (!images || images.length === 0) return null;
 
   return (
-    <div className={`relative w-full h-64 md:h-96 lg:h-[500px] overflow-hidden rounded-xl ${className}`}>
+    <div className={`relative w-full h-64 md:h-80 lg:h-96 overflow-hidden ${className}`}>
       {/* Background Images */}
       {images.map((src, i) => (
         <div
