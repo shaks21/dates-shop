@@ -20,7 +20,7 @@ export default function CheckoutButton({ items }: Props) {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items }), // send entire cart items array
+        body: JSON.stringify({ items }),
       });
 
       const data = await res.json();
@@ -41,7 +41,28 @@ export default function CheckoutButton({ items }: Props) {
     <button
       onClick={handleCheckout}
       disabled={loading || items.length === 0}
-      className="w-full sm:w-auto bg-zinc-800 hover:bg-zinc-700 text-white font-black uppercase rounded-2xl shadow-md px-6 py-3 transition"
+      className={`
+        relative
+        inline-block        
+        text-charcoal
+        font-serif
+        font-semibold
+        uppercase
+        tracking-widest
+        rounded-lg
+        px-6
+        py-3
+        shadow-lg
+        transition
+        duration-300
+        disabled:opacity-50
+        disabled:cursor-not-allowed
+        hover:brightness-110
+        focus:outline-none
+        focus:ring-4
+        focus:ring-amber-300
+        focus:ring-opacity-70
+      `}
     >
       {loading ? "Processing..." : "Checkout"}
     </button>

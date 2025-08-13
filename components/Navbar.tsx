@@ -25,9 +25,11 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 w-full bg-gradient-to-r from-amber-300 to-[color:var(--color-navbar)] border-t-1 border-t-black z-50 transition-all duration-300 ${
-        scrolled ? "pt-1 shadow-md shadow-black/50" : " pt-2"
-      }`}
+      className={`fixed top-0 w-full z-50 bg-(image:--color-navbar)
+    border-t border-black
+    transition-all duration-300 ${
+      scrolled ? "pt-1 shadow-md shadow-black/50" : "pt-2"
+    }`}
     >
       <nav className="flex flex-col items-center">
         {/* Top Banner with Slogan & Cart */}
@@ -36,9 +38,9 @@ export default function Navbar() {
           <div className="md:hidden flex items-center justify-center inset-0">
             <Link href="/" aria-label="Home">
               <Image
-                src="/logo.png"
+                src="/malkilogo.jpeg"
                 alt="DateASuperfood Logo"
-                width={scrolled ? 60 : 80}
+                width={scrolled ? 50 : 70}
                 height={60}
                 className="object-contain transition-all duration-300 drop-shadow-sm"
               />
@@ -47,6 +49,29 @@ export default function Navbar() {
           <span className="hidden md:block text-center italic">
             Nature&apos;s Finest. Delivered with Elegance.
           </span>
+
+          {/* Mobile Burger Button */}
+          <button
+            className="md:hidden flex flex-col gap-1 absolute left-44 z-60"
+            onClick={() => toggleMenu()}
+            aria-label="Menu"
+          >
+            <span
+              className={`w-6 h-0.5 bg-black transition-all ${
+                isOpen ? "rotate-45 translate-y-1.5" : ""
+              }`}
+            />
+            <span
+              className={`w-6 h-0.5 bg-black transition-all ${
+                isOpen ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`w-6 h-0.5 bg-black transition-all ${
+                isOpen ? "-rotate-45 -translate-y-1.5" : ""
+              }`}
+            />
+          </button>
 
           <div className="hidden md:flex gap-4 absolute right-44 top-1/2 -translate-y-1/2">
             <CurrencyButton />
@@ -61,13 +86,13 @@ export default function Navbar() {
         </div>
 
         {/* Logo centered on desktop only */}
-        <div className="hidden md:flex justify-center w-full bg-white transition-all duration-300">
+        <div className="hidden md:flex justify-center w-full pt-2 bg-white transition-all duration-300">
           <Link href="/" className="flex justify-center">
             <Image
-              src="/logo.png"
+              src="/malkilogo.jpeg"
               alt="DateASuperfood Logo"
-              width={scrolled ? 70 : 120} // shrink width
-              height={scrolled ? 80 : 120}
+              width={scrolled ? 50 : 80} // shrink width
+              height={scrolled ? 50 : 80}
               className="object-contain rounded-lg transition-all duration-300"
             />
           </Link>
@@ -95,29 +120,6 @@ export default function Navbar() {
             Contact Us
           </Link>
         </div>
-
-        {/* Mobile Burger Button */}
-        <button
-          className="md:hidden flex flex-col gap-1 absolute right-4 top-4 z-60"
-          onClick={() => toggleMenu()}
-          aria-label="Menu"
-        >
-          <span
-            className={`w-6 h-0.5 bg-white transition-all ${
-              isOpen ? "rotate-45 translate-y-1.5" : ""
-            }`}
-          />
-          <span
-            className={`w-6 h-0.5 bg-white transition-all ${
-              isOpen ? "opacity-0" : ""
-            }`}
-          />
-          <span
-            className={`w-6 h-0.5 bg-white transition-all ${
-              isOpen ? "-rotate-45 -translate-y-1.5" : ""
-            }`}
-          />
-        </button>
 
         {/* Mobile Menu Overlay */}
         <div

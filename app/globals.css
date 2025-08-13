@@ -10,7 +10,8 @@
   --color-charcoal: #1a1a1a;
   --color-dark: #121210;
   --color-gold-glow: #e2c729;
-  --color-navbar: #cfba40;
+  --color-navbar: linear-gradient(to right, #cb7f0e, #D4AF37, #cb7f0e, #D4AF37);
+  /* --color-navbar: linear-gradient(to right, #6c7788, #8a94a5, #6c7788); */
 }
 
 /* Dark Mode */
@@ -101,4 +102,52 @@ h4,
     transition-duration: 0.1s !important;
     scroll-behavior: auto;
   }
+}
+
+/* Subtle Shine Effect on Buttons */
+button {
+  position: relative;
+  overflow: hidden;
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, transparent, rgba(255,255,255,0.3), transparent 70%);
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+button:hover::after {
+  opacity: 1;
+  animation: shine 1.5s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-50%) translateY(-50%) rotate(45deg); }
+  100% { transform: translateX(50%) translateY(50%) rotate(45deg); }
+}
+
+/* Refined Input Focus Glow */
+input:focus {
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.3);
+}
+
+/* Softer Transitions */
+* {
+  transition-property: background-color, border-color, color, box-shadow, transform;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
 }

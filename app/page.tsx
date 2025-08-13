@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import "./globals.css";
 import AlternatingImages from "@/components/AlternatingImages";
 import Image from "next/image";
+import OrbitImageSelector from "@/components/OrbitImageSelector";
 
 type Product = {
   _id: string;
@@ -54,7 +54,7 @@ export default function HomePage() {
   const [dark, setDark] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  const images = ["/hero1.jpg", "/hero2.jpg", "/hero3.jpg"];
+  const images = ["/hero4.jpeg", "/hero2.jpg", "/hero3.jpg"];
 
   useEffect(() => {
     setLoaded(true);
@@ -93,7 +93,7 @@ export default function HomePage() {
       </button> */}
 
       {/* Main Content */}
-      <main className="md:pt-20 relative">
+      <main className="relative">
         {/* Hero Section */}
         <section id="home" className="py-6 md:py-10 text-center ">
           <FadeIn>
@@ -113,6 +113,14 @@ export default function HomePage() {
                   Hand-harvested. Sun-ripened. Crafted with care.
                 </p>
               </AlternatingImages>
+            </div>
+          </FadeIn>
+        </section>
+
+        <section id="home" className="py-6 md:py-10 text-center ">
+          <FadeIn>
+            <div className="relative w-full mx-auto overflow-hidden shadow-2xl">
+              <OrbitImageSelector />
             </div>
           </FadeIn>
         </section>
@@ -340,7 +348,7 @@ export default function HomePage() {
 
         {/* Gift CTA */}
         <FadeIn>
-          <section className="py-20 px-6 bg-gradient-to-r from-amber-400 to-[color:var(--color-navbar)] text-black">
+          <section className="py-20 px-6 bg-(image:--color-navbar) text-black">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-light mb-4">
                 Curated Gift Boxes

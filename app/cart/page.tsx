@@ -7,6 +7,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import Image from "next/image";
 import Link from "next/link";
+import RemoveButtonWithConfirm from "@/components/RemoveButtonWithConfirm";
 
 export default function CartPage() {
   const { cart, removeFromCart, addToCart, clearCart } = useCartStore();
@@ -16,50 +17,58 @@ export default function CartPage() {
 
   if (cart.length === 0)
     return (
-      <div className="max-w-4xl mx-auto mt-16 text-center text-gray-300 text-xl font-bold uppercase tracking-wide">
+      <div className="max-w-4xl mx-auto mt-20 text-center text-amber-700 text-xl font-serif font-semibold uppercase tracking-wide">
         Your cart is empty.
       </div>
     );
 
   return (
     <>
-      <div className="max-w-4xl mx-auto px-4 pt-12 pb-32 space-y-6 bg-black text-white font-sans min-h-[calc(100vh-4rem)]">
-        <h1 className="text-2xl font-bold uppercase tracking-wider text-white text-center">
+      <div className="max-w-4xl mx-auto px-6 pt-14 pb-32 space-y-6 bg-charcoal text-cream font-sans min-h-[calc(100vh-4rem)] rounded-lg shadow-lg">
+        <h1
+          className="text-3xl md:text-4xl font-serif font-extrabold uppercase tracking-widest text-black mb-8 text-center"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
           Your Cart
         </h1>
 
         {cart.map((item) => (
           <div
             key={item.slug}
-            className="flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-xl p-3 transition-all hover:bg-zinc-850 duration-200"
+            className="flex items-center justify-between border border-amber-700 rounded-xl p-4 shadow-inner transition-all duration-200"
           >
-            <div className="flex items-center space-x-3 flex-1">
+            <div className="flex items-center space-x-4 flex-1">
               <Image
                 src={`/${item.image}`}
                 alt={item.title}
                 width={64}
                 height={64}
-                className="w-16 h-16 object-cover rounded-lg border border-zinc-800"
+                className="w-16 h-16 object-cover rounded-lg border border-amber-700 shadow-sm"
               />
               <div className="flex-1">
                 <Link href={`/products/${item.slug}`}>
-                  <h2 className="text-lg font-bold uppercase tracking-tight hover:text-gray-200 transition">
+                  <h2
+                    className="text-lg font-serif font-semibold uppercase tracking-tight hover:text-amber-700 transition"
+                    style={{ fontFamily: "'Playfair Display', serif" }}
+                  >
                     {item.title}
                   </h2>
                 </Link>
-                <p className="text-gray-400 text-xs">
+                <p className="text-amber-light text-xs font-mono mt-1">
                   ${(item.price / 100).toFixed(2)} each
                 </p>
 
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-3 mt-3">
                   <button
                     onClick={() => removeFromCart(item.slug, false)}
-                    className="p-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 transition text-white"
+                    className="p-2 rounded-md bg-amber-400 text-charcoal hover:bg-amber-700 transition"
                     aria-label="Decrease quantity"
                   >
                     <Minus size={14} />
                   </button>
-                  <span className="text-base font-bold">{item.quantity}</span>
+                  <span className="text-lg font-bold font-mono text-black">
+                    {item.quantity}
+                  </span>
                   <button
                     onClick={() =>
                       addToCart({
@@ -70,41 +79,41 @@ export default function CartPage() {
                         image: item.image,
                       })
                     }
-                    className="p-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 transition text-white"
+                    className="p-2 rounded-md bg-amber-400 text-charcoal hover:bg-amber-700 transition"
                     aria-label="Increase quantity"
                   >
                     <Plus size={14} />
                   </button>
 
-                  <button
-                    onClick={() => removeFromCart(item.slug, true)}
-                    className="ml-4 text-red-500 hover:text-red-600 transition"
-                    aria-label="Remove all"
-                    title="Remove all"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  <RemoveButtonWithConfirm
+                    itemTitle={item.title}
+                    onConfirmRemove={() => removeFromCart(item.slug, true)}
+                    className="ml-10 text-red-500 hover:text-red-600 transition"
+                  />                  
                 </div>
               </div>
             </div>
 
-            <div className="text-base font-bold uppercase tracking-wide text-white">
+            <div className="text-lg font-mono font-extrabold uppercase tracking-wide text-black">
               ${((item.price * item.quantity) / 100).toFixed(2)}
             </div>
           </div>
         ))}
       </div>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-zinc-900 bg-opacity-98 border-t border-zinc-800 px-4 py-4 flex items-center justify-center z-50">
-        <div className="max-w-4xl w-full flex items-center justify-between gap-4">
-          <div className="text-lg font-bold uppercase tracking-wider text-white">
+      <footer className="fixed bottom-0 left-0 right-0 bg-charcoal bg-opacity-95 border-t border-amber-700 px-6 py-4 flex items-center justify-center z-50 shadow-lg">
+        <div className="max-w-4xl w-full flex items-center justify-between gap-6">
+          <div
+            className="text-xl font-serif font-extrabold uppercase tracking-widest text-black"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             Total: ${total.toFixed(2)}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <button
               onClick={() => setConfirmOpen(true)}
-              className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold uppercase tracking-wide rounded-lg px-4 py-2 transition duration-200"
+              className="bg-amber-400 text-charcoal font-semibold uppercase tracking-wide rounded-lg px-5 py-2 shadow-md hover:bg-amber-700 transition"
             >
               Clear Cart
             </button>

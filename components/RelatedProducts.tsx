@@ -24,25 +24,42 @@ export default function RelatedProducts({ currentSlug }: { currentSlug: string }
   }, [currentSlug]);
 
   return (
-    <div className="bg-zinc-800 p-6 rounded-xl shadow-md border border-white/10">
-      <h3 className="text-xl font-black text-white uppercase mb-4">Related Products</h3>
-      <div className="space-y-4">
+    <div
+      className="bg-cream border border-cream-border rounded-xl shadow-md p-6"
+      style={{ borderColor: "var(--color-cream-border)" }}
+    >
+      <h3
+        className="text-lg font-serif font-semibold uppercase mb-5"
+        style={{fontFamily: "'Playfair Display', serif" }}
+      >
+        Related Products
+      </h3>
+      <div className="space-y-5">
         {products.map((product) => (
           <Link
             key={product._id}
             href={`/products/${product.slug}`}
-            className="flex items-center gap-4 hover:bg-zinc-700 p-2 rounded transition"
+            className="flex items-center gap-4 p-2 rounded-lg transition-all duration-200 hover:bg-amber-400 hover:shadow-lg"
+            style={{ backgroundColor: "transparent" }}
           >
             <Image
               src={`/${product.image}`}
               alt={product.title}
-              width={60}
-              height={60}
-              className="rounded-md object-cover w-16 h-16 border border-white/10"
+              width={64}
+              height={64}
+              className="rounded-md object-cover border border-amber-400"
+              style={{ borderColor: "var(--color-amber-400)" }}
             />
-            <div className="flex flex-col text-sm text-white">
-              <span className="font-semibold">{product.title}</span>
-              <span className="text-gray-200 font-bold">
+            <div className="flex flex-col">
+              <span
+                className="font-serif font-semibold text-charcoal"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                {product.title}
+              </span>
+              <span
+                className="font-bold"
+              >
                 ${(product.price / 100).toFixed(2)}
               </span>
             </div>

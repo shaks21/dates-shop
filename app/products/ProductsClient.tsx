@@ -1,4 +1,3 @@
-// app/products/ProductsClient.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -28,22 +27,17 @@ export default function ProductsClient() {
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<SortOption>("title-asc");
 
-  // Fetch products
   useEffect(() => {
     fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
-      .then((data: Product[]) => {
-        setProducts(data);
-      });
+      .then((data: Product[]) => setProducts(data));
   }, []);
 
-  // Sync search param
   useEffect(() => {
     const newSearch = searchParams?.get("search") || "";
     setSearch(newSearch);
   }, [searchParams]);
 
-  // Filter and sort
   useEffect(() => {
     const filteredProducts = products.filter(
       (p) =>
@@ -75,35 +69,38 @@ export default function ProductsClient() {
 
   return (
     <>
+      {/* Search & Sort Controls */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10">
         <input
           type="text"
           placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full sm:max-w-sm px-4 py-2 text-black rounded bg-white placeholder-gray-500"
+          className="w-full sm:max-w-sm px-4 py-2 rounded border border-black text-charcoal transition focus:outline-none focus:ring-2 focus:ring-amber-700"
         />
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortOption)}
-          className="w-full sm:max-w-xs px-4 py-2 rounded bg-white text-black"
+          className="w-full sm:max-w-xs px-4 py-2 rounded border border-black text-charcoal transition focus:outline-none focus:ring-2 focus:ring-amber-700"
         >
           <option value="title-asc">Title: A to Z</option>
           <option value="title-desc">Title: Z to A</option>
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
         </select>
-        <span className="text-sm opacity-50 whitespace-nowrap">
+        <span className="text-sm text-charcoal/70 whitespace-nowrap select-none">
           Showing {paginated.length} of {filtered.length} products
         </span>
       </div>
 
+      {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {paginated.map((product) => (
           <Link
             key={product._id}
             href={`/products/${product.slug}`}
-            className="group border border-white/10 rounded-xl overflow-hidden hover:shadow-xl hover:scale-[1.01] transition"
+            className="group border border-cream-border rounded-xl overflow-hidden bg-white bg-opacity-90 shadow-md hover:shadow-xl transition-transform hover:scale-[1.02]"
+            style={{ borderColor: "var(--color-cream-border)" }}
           >
             <div className="relative w-full h-64 overflow-hidden">
               <Image
@@ -111,34 +108,44 @@ export default function ProductsClient() {
                 alt={product.title}
                 fill
                 style={{ objectFit: "cover" }}
-                className="group-hover:scale-105 transition-transform duration-300"
+                className="group-hover:scale-105 transition-transform duration-300 rounded-t-xl"
               />
             </div>
             <div className="p-6">
-              <h2 className="text-xl font-black uppercase mb-2">{product.title}</h2>
-              <p className="text-sm opacity-70 line-clamp-2">{product.description}</p>
-              <div className="mt-4 text-lg font-mono">${(product.price / 100).toFixed(2)}</div>
+              <h2
+                className="text-xl font-serif font-black uppercase mb-2"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                {product.title}
+              </h2>
+              <p className="text-sm text-charcoal/70 line-clamp-2 font-sans">
+                {product.description}
+              </p>
+              <div className="mt-4 text-lg font-mono font-bold text-black" >
+                ${(product.price / 100).toFixed(2)}
+              </div>
             </div>
           </Link>
         ))}
       </div>
 
+      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center space-x-4 mt-12">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-4 py-2 bg-white text-black rounded disabled:opacity-50"
+            className="px-5 py-2 rounded border border-amber-700 bg-amber-400 text-amber-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition hover:bg-amber-700 hover:text-white"
           >
             Prev
           </button>
-          <span className="px-4 py-2 bg-white text-black rounded font-bold">
+          <span className="px-5 py-2 rounded border border-amber-700 bg-amber-400 font-bold text-amber-700 select-none">
             {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="px-4 py-2 bg-white text-black rounded disabled:opacity-50"
+            className="px-5 py-2 rounded border border-amber-700 bg-amber-400 text-amber-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition hover:bg-amber-700 hover:text-white"
           >
             Next
           </button>
