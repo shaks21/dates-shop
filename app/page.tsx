@@ -6,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 import AlternatingImages from "@/components/AlternatingImages";
 import Image from "next/image";
 import OrbitImageSelector from "@/components/OrbitImageSelector";
+import InfoGraphics from "@/components/InfoGraphics";
 
 type Product = {
   _id: string;
@@ -117,10 +118,10 @@ export default function HomePage() {
           </FadeIn>
         </section>
 
-        <section id="home" className="py-6 md:py-10 text-center ">
+        <section id="home" className="py-5 md:py-5 text-center ">
           <FadeIn>
-            <div className="relative w-full mx-auto overflow-hidden shadow-2xl">
-              <OrbitImageSelector />
+            <div className="relative w-2/3 mx-auto overflow-hidden">
+              <InfoGraphics />
             </div>
           </FadeIn>
         </section>

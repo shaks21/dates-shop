@@ -151,3 +151,13 @@ input:focus {
 .animate-spin-slow {
   animation: spin-slow 20s linear infinite;
 }
+
+:root {
+  --scroll-lock: auto;
+}
+
+body.scroll-lock {
+  overflow: hidden;
+  padding-right: var(--scroll-bar-gap);
+}
+
