@@ -242,10 +242,19 @@ export default function InfoGraphics(): JSX.Element {
     setCurrentImageIndex(0);
   };
 
+  const handleImageClick = (): void => {
+    if (isScrolling) return;
+    if (currentImageIndex < images.length - 1) {
+      triggerImageChange(1);
+    } else {
+      return; // do nothing on last image
+    }
+  };
+
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden bg-white"
+      className="relative  w-full h-screen max-md:h-[80vh] overflow-hidden bg-white"
     >
       {/* Progress indicator */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
@@ -263,15 +272,16 @@ export default function InfoGraphics(): JSX.Element {
       <img
         src={images[currentImageIndex]}
         alt={`Superfood infographic ${currentImageIndex + 1}`}
-        className="absolute top-1/2 left-1/2 w-full h-full object-contain transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
+        className="absolute  w-full h-full object-contain cursor-pointer transition-all duration-300"
         loading="lazy"
+        onClick={handleImageClick}
       />
 
       {/* Navigation hint */}
       {currentImageIndex < images.length - 1 && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
           <div className="text-gray-600 text-sm mb-2">
-            Swipe up or scroll down for next
+            Scroll down or click for next
           </div>
           <div className="w-6 h-6 border-2 border-gray-400 rounded-full mx-auto animate-bounce">
             <div className="w-1 h-2 bg-gray-400 rounded-full mx-auto mt-1"></div>
