@@ -254,7 +254,7 @@ export default function InfoGraphics(): JSX.Element {
   return (
     <div
       ref={containerRef}
-      className="relative  w-full h-screen max-md:h-[80vh] overflow-hidden bg-white"
+      className="relative  w-full h-screen max-md:h-[50vh] overflow-hidden bg-white"
     >
       {/* Progress indicator */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
