@@ -246,7 +246,6 @@ export default function InfoGraphics(): JSX.Element {
     <div
       ref={containerRef}
       className="relative w-full h-screen overflow-hidden bg-white"
-      style={{ touchAction: isInView ? "none" : "auto" }}
     >
       {/* Progress indicator */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
