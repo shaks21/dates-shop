@@ -118,14 +118,6 @@ export default function HomePage() {
           </FadeIn>
         </section>
 
-        <section id="home" className="py-5 md:py-5 text-center ">
-          <FadeIn>
-            <div className="relative w-2/3 mx-auto overflow-hidden">
-              <InfoGraphics />
-            </div>
-          </FadeIn>
-        </section>
-
         {/* Signature Product Spotlight */}
         <FadeIn>
           <section className="py-20 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-gray-800 dark:to-gray-900">
@@ -255,6 +247,14 @@ export default function HomePage() {
             </div>
           </section>
         </FadeIn>
+
+        <section id="benefits" className="text-center ">
+          <FadeIn>
+            <div className="">
+              <InfoGraphics />
+            </div>
+          </FadeIn>
+        </section>
 
         {/* About Section */}
         <FadeIn>
