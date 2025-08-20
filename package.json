@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.6",
+    "@types/next-auth": "^3.13.0",
     "framer-motion": "^12.23.12",
     "lucide": "^0.525.0",
     "lucide-react": "^0.525.0",
     "mongoose": "^8.16.4",
     "next": "15.4.2",
+    "next-auth": "^4.24.11",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-intersection-observer": "^9.16.0",

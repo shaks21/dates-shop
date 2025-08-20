@@ -259,7 +259,7 @@ export default function HomePage() {
         {/* About Section */}
         <FadeIn>
           <section
-            id="our-story"
+            id="about"
             className="px-6 py-16 bg-amber-50 dark:bg-gray-800"
           >
             <div className="max-w-4xl mx-auto text-center">
@@ -368,7 +368,7 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="px-6 py-12 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+      <footer id="footer" className="px-6 py-12 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
         <div className="max-w-6xl mx-auto text-center">
           <small className="text-xs text-gray-500 dark:text-gray-400 mb-4 block tracking-wide">
             © {new Date().getFullYear()}, Organic Dates Co. All Rights Reserved.

@@ -41,28 +41,7 @@ export default function CheckoutButton({ items }: Props) {
     <button
       onClick={handleCheckout}
       disabled={loading || items.length === 0}
-      className={`
-        relative
-        inline-block        
-        text-charcoal
-        font-serif
-        font-semibold
-        uppercase
-        tracking-widest
-        rounded-lg
-        px-6
-        py-3
-        shadow-lg
-        transition
-        duration-300
-        disabled:opacity-50
-        disabled:cursor-not-allowed
-        hover:brightness-110
-        focus:outline-none
-        focus:ring-4
-        focus:ring-amber-300
-        focus:ring-opacity-70
-      `}
+      className="w-full bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-black py-3 p-4 rounded-xl font-bold uppercase tracking-wider text-sm transition-all duration-300 transform hover:scale-[1.02] active:scale-95 focus:outline-none focus:ring-4 focus:ring-amber-400/50 shadow-lg"
     >
       {loading ? "Processing..." : "Checkout"}
     </button>

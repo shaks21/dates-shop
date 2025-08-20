@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, JSX } from "react";
 import { RotateCcw } from "lucide-react";
+import { useBodyScrollLock } from "./hooks/useBodyScrollLock";
 
 const images: string[] = [
   "/superfood_infographics1.jpg",
@@ -10,27 +11,7 @@ const images: string[] = [
   "/superfood_infographics6.jpg",
 ];
 
-// Custom hook for body scroll lock
-function useBodyScrollLock(locked: boolean): void {
-  useEffect(() => {
-    const scrollBarGap =
-      window.innerWidth - document.documentElement.clientWidth;
-    document.documentElement.style.setProperty(
-      "--scroll-bar-gap",
-      `${scrollBarGap}px`
-    );
 
-    if (locked) {
-      document.body.classList.add("scroll-lock");
-    } else {
-      document.body.classList.remove("scroll-lock");
-    }
-
-    return () => {
-      document.body.classList.remove("scroll-lock");
-    };
-  }, [locked]);
-}
 
 export default function InfoGraphics(): JSX.Element {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);

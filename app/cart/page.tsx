@@ -99,24 +99,26 @@ export default function CartPage() {
             </div>
           </div>
         ))}
+
+        <button
+              onClick={() => setConfirmOpen(true)}
+              className="bg-amber-400 text-charcoal font-semibold uppercase tracking-wide rounded-lg px-5 py-2 shadow-md hover:bg-amber-700 transition"
+            >
+              Clear Cart
+            </button>
       </div>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-charcoal bg-opacity-95 border-t border-amber-700 px-6 py-4 flex items-center justify-center z-50 shadow-lg">
+      <footer className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-amber-50 to-amber-100 border-t border-amber-700 px-6 py-4 flex items-center justify-center z-50 shadow-lg">
         <div className="max-w-4xl w-full flex items-center justify-between gap-6">
           <div
-            className="text-xl font-serif font-extrabold uppercase tracking-widest text-black"
+            className="w-full text-xl font-serif font-extrabold uppercase tracking-widest text-black text-right"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Total: ${total.toFixed(2)}
           </div>
 
           <div className="flex gap-4">
-            <button
-              onClick={() => setConfirmOpen(true)}
-              className="bg-amber-400 text-charcoal font-semibold uppercase tracking-wide rounded-lg px-5 py-2 shadow-md hover:bg-amber-700 transition"
-            >
-              Clear Cart
-            </button>
+            
 
             <CheckoutButton
               items={cart.map(({ slug, quantity }) => ({ slug, quantity }))}
