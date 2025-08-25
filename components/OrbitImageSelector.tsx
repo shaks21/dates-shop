@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 
 const images = [
   "/superfood.jpeg",
@@ -15,7 +16,7 @@ export default function OrbitImageSelector() {
   return (
     <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] mx-auto">
       {/* Center Image */}
-      <img
+      <Image
         src={centerImage}
         alt="center"
         className="absolute top-1/2 left-1/2 w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-64 lg:h-64 rounded-full object-cover -translate-x-1/2 -translate-y-1/2 border-4 border-white shadow-lg z-10"
@@ -35,7 +36,7 @@ export default function OrbitImageSelector() {
                 willChange: "transform"
               }}
             >
-              <img
+              <Image
                 src={img}
                 alt={`orbit-${i}`}
                 onClick={() => setCenterImage(img)}

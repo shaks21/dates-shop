@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { useCartTotal } from "@/lib/stores/cartStore";
 import CheckoutButton from "@/components/cart/CheckoutButton";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import Image from "next/image";
 import Link from "next/link";

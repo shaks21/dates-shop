@@ -2,7 +2,7 @@
 "use client";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { ShoppingCart } from "lucide-react";
-import CartDrawer from "./CartDrawer";
+// import CartDrawer from "./CartDrawer";
 
 type CartButtonProps = {
   mobile?: boolean;

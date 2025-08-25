@@ -1,64 +1,53 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
 
-export default function LoginPage() {
-  const { data: session } = useSession();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+export default function RegisterPage() {
+  const router = useRouter();
+  const [form, setForm] = useState({ email: "", password: "", name: "" });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: formData.email,
-      password: formData.password,
-      callbackUrl: "/",
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
     });
 
-    if (res?.error) {
-      setError("Invalid email or password");
+    const data = await res.json();
+    if (res.ok) {
+      // 🔥 Automatically log the user in
+      const loginResult = await signIn("credentials", {
+        redirect: false,
+        email: form.email,
+        password: form.password,
+      });
+
+      if (loginResult?.ok) {
+        router.push("/dashboard"); // send them to homepage (or /dashboard)
+      } else {
+        router.push("/login"); // fallback
+      }
+    } else {
+      setError(data.error || "Something went wrong");
       setIsLoading(false);
     }
   };
 
-  if (session) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-cream dark:bg-gray-900 px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg p-10 max-w-md w-full text-center"
-        >
-          <h2 className="text-2xl font-light tracking-wide text-gray-800 dark:text-white mb-4">
-            Welcome, {session?.user?.name || "Guest"}
-          </h2>
-
-          <button
-            onClick={() => signOut({ callbackUrl: "/" })}
-            className="w-full py-3 bg-gray-900 text-white uppercase tracking-wider text-sm hover:bg-amber-700 transition-colors duration-300 rounded-none"
-          >
-            Sign Out
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cream dark:bg-gray-900 px-6">
+    <div className="min-h-screen bg-cream dark:bg-gray-900 flex items-center justify-center px-6 mt-6">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -66,10 +55,10 @@ export default function LoginPage() {
         className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg p-10 max-w-md w-full"
       >
         <h2 className="text-3xl font-light text-center text-gray-800 dark:text-white mb-2">
-          Welcome Back
+          Create Account
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
-          Sign in to access your dashboard
+          Join us to shop the finest dates
         </p>
 
         {error && (
@@ -81,20 +70,31 @@ export default function LoginPage() {
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+              Name (optional)
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Your name"
+              className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white placeholder-gray-400 focus:ring-amber-600 focus:border-amber-600 focus:outline-none text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
               Email
             </label>
             <input
               type="email"
               name="email"
-              value={formData.email}
+              value={form.email}
               onChange={handleChange}
               required
-              autoComplete="username"
               placeholder="you@example.com"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white placeholder-gray-400 focus:ring-amber-600 focus:border-amber-600 focus:outline-none text-sm"
             />
           </div>
-
           <div>
             <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
               Password
@@ -102,10 +102,9 @@ export default function LoginPage() {
             <input
               type="password"
               name="password"
-              value={formData.password}
+              value={form.password}
               onChange={handleChange}
               required
-              autoComplete="current-password"
               minLength={6}
               placeholder="••••••••"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white placeholder-gray-400 focus:ring-amber-600 focus:border-amber-600 focus:outline-none text-sm"
@@ -121,25 +120,14 @@ export default function LoginPage() {
                 : "bg-amber-600 text-white hover:bg-amber-700"
             }`}
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isLoading ? "Creating..." : "Sign Up"}
           </button>
         </form>
 
-        <div className="mt-4 text-center">
-          <Link
-            href="/forgot-password"
-            className="text-sm text-amber-700 dark:text-amber-400 hover:underline"
-          >
-            Forgot Password?
-          </Link>
-        </div>
-        <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            className="text-amber-700 dark:text-amber-400 hover:underline"
-          >
-            Sign Up
+        <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+          Already have an account?{" "}
+          <Link href="/login" className="text-amber-700 dark:text-amber-400 hover:underline">
+            Log In
           </Link>
         </div>
 
@@ -160,7 +148,7 @@ export default function LoginPage() {
             onClick={() => signIn("google")}
             className="w-full py-3 border border-gray-300 dark:border-gray-600 bg-blue-500 dark:bg-gray-700 text-sm uppercase tracking-wider text-white dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors rounded-none"
           >
-            Sign in with Google
+            Sign up with Google
           </button>
         </div>
       </motion.div>

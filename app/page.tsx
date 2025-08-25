@@ -5,7 +5,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import AlternatingImages from "@/components/AlternatingImages";
 import Image from "next/image";
-import OrbitImageSelector from "@/components/OrbitImageSelector";
+// import OrbitImageSelector from "@/components/OrbitImageSelector";
 import InfoGraphics from "@/components/InfoGraphics";
 
 type Product = {
@@ -52,7 +52,7 @@ const FadeIn = ({
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [dark, setDark] = useState(false);
+  const [dark] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   const images = ["/hero4.jpeg", "/hero2.jpg", "/hero3.jpg"];
@@ -180,7 +180,7 @@ export default function HomePage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {products.slice(0, 6).map((product, index) => (
+                {products.slice(0, 6).map((product) => (
                   <Link
                     key={product._id}
                     href={`/products/${product.slug}`}
@@ -333,7 +333,7 @@ export default function HomePage() {
 
                     <div className="w-full md:w-1/2">
                       <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden shadow-md">
-                        <img
+                        <Image
                           src={stage.img}
                           alt={stage.step}
                           className="w-full h-full object-cover"

@@ -1,14 +1,14 @@
 "use client";
 
-import { X, Trash2, Minus, Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { X, Minus, Plus } from "lucide-react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useNavStore } from "@/lib/stores/navStore";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { useCartTotal } from "@/lib/stores/cartStore";
-import ConfirmDialog from "../ui/ConfirmDialog";
+// import ConfirmDialog from "../ui/ConfirmDialog";
 import RemoveButtonWithConfirm from "../RemoveButtonWithConfirm";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 
@@ -21,8 +21,8 @@ export default function CartDrawer() {
   const { isCartOpen, setIsCartOpen, cart, removeFromCart, updateQuantity } =
     useCartStore();
   const total = useCartTotal();
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  // const [confirmOpen, setConfirmOpen] = useState(false);
+  // const [itemToRemove, setItemToRemove] = useState<string | null>(null);
 
   const toggleMenu = useNavStore((state) => state.toggleMenu);
   const drawerRef = useRef<HTMLDivElement>(null);

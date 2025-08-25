@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, JSX } from "react";
 import { RotateCcw } from "lucide-react";
 import { useBodyScrollLock } from "./hooks/useBodyScrollLock";
+import Image from "next/image";
 
 const images: string[] = [
   "/superfood_infographics1.jpg",
@@ -250,7 +251,7 @@ export default function InfoGraphics(): JSX.Element {
       </div>
 
       {/* Main image */}
-      <img
+      <Image
         src={images[currentImageIndex]}
         alt={`Superfood infographic ${currentImageIndex + 1}`}
         className="absolute  w-full h-full object-contain cursor-pointer transition-all duration-300"

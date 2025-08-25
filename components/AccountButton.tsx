@@ -36,7 +36,7 @@ export default function AccountButton() {
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-white border border-[color:var(--color-gold)] shadow-md rounded z-50">
           <Link
-            href="/account"
+            href="/dashboard"
             className="block px-4 py-2 text-sm hover:bg-gray-100"
             onClick={() => setOpen(false)}
           >
