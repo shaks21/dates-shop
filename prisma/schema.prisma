@@ -1,17 +1,21 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
- // output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Add this enum definition
+enum OrderStatus {
+  pending
+  completed
+  cancelled
+  refunded
 }
 
 model User {
@@ -31,15 +35,16 @@ model User {
 }
 
 model Order {
-  id        String      @id @default(cuid())
-  userId    String
-  total     Float
-  status    String      @default("pending")
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String      @id @default(cuid())
+  userId     String?     // Make userId optional
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  guestEmail String?
+  status     OrderStatus // Now this references the defined enum
+  total      Float
   orderItems OrderItem[]
+  metadata   Json?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model OrderItem {

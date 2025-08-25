@@ -1,4 +1,4 @@
-// app/api/checkout/route.ts (updated)
+// app/api/checkout/route.ts
 import type { NextRequest } from "next/server";
 import Stripe from "stripe";
 import { connectToDatabase } from "@/lib/mongoose";
@@ -10,7 +10,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(req: NextRequest) {
-  const { items, userEmail } = await req.json(); // Add userEmail to request
+  const { items, userEmail, userId } = await req.json();
+
+  console.log("Checkout request:", { userEmail, userId });
 
   if (!Array.isArray(items) || items.length === 0) {
     return new Response(JSON.stringify({ message: "No items provided" }), {
@@ -44,7 +46,7 @@ export async function POST(req: NextRequest) {
             name: product.title, 
             images: [product.image] 
           },
-          unit_amount: Math.round(product.price * 100), // Convert to cents
+          unit_amount: Math.round(product.price * 100),
         },
         quantity: item.quantity,
       };
@@ -63,11 +65,13 @@ export async function POST(req: NextRequest) {
       mode: "payment",
       payment_method_types: ["card"],
       line_items,
-      customer_email: userEmail, // Pass user email for webhook
+      customer_email: userEmail, // Pre-fill email (user can change)
+      billing_address_collection: 'required',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cancel`,
       metadata: {
-        // You can add additional metadata here if needed
+        userId: userId, // Store user ID for reliable matching
+        userEmail: userEmail, // Store original email as fallback
       },
     });
 

@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.text();
     
-    // Verify the webhook came from Stripe
     const event = stripe.webhooks.constructEvent(
       body,
       sig,
@@ -29,13 +28,12 @@ export async function POST(req: NextRequest) {
 
     console.log("Webhook received:", event.type);
 
-    // Handle successful checkout
     if (event.type === "checkout.session.completed") {
       await handleSuccessfulPayment(event);
     }
 
     return NextResponse.json({ received: true });
-  } catch (error: unknown) { // Changed from 'any' to 'unknown'
+  } catch (error: unknown) {
     console.error("Webhook error:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "Webhook handler failed" },
@@ -47,24 +45,50 @@ export async function POST(req: NextRequest) {
 async function handleSuccessfulPayment(event: Stripe.Event) {
   const session = event.data.object as Stripe.Checkout.Session;
 
-  // Only process paid sessions
-  if (session.payment_status !== 'paid' || !session.customer_email) {
-    console.log("Session not paid or missing email:", session.id);
+  if (session.payment_status !== 'paid') {
+    console.log("Session not paid:", session.id);
     return;
   }
 
   try {
-    // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { email: session.customer_email },
-    });
+    let userId: string | null = null;
+    let userEmail: string | null = null;
 
-    if (!user) {
-      console.error("User not found for email:", session.customer_email);
-      return;
+    // Try to find user
+    if (session.metadata?.userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: session.metadata.userId },
+      });
+      if (user) {
+        userId = user.id;
+        userEmail = user.email;
+        console.log("User found by ID:", userId);
+      }
     }
 
-    // Get complete session details with products
+    if (!userId && session.metadata?.userEmail) {
+      const user = await prisma.user.findUnique({
+        where: { email: session.metadata.userEmail },
+      });
+      if (user) {
+        userId = user.id;
+        userEmail = user.email;
+        console.log("User found by metadata email:", userEmail);
+      }
+    }
+
+    if (!userId && session.customer_email) {
+      const user = await prisma.user.findUnique({
+        where: { email: session.customer_email },
+      });
+      if (user) {
+        userId = user.id;
+        userEmail = user.email;
+        console.log("User found by customer email:", userEmail);
+      }
+    }
+
+    // Get session details
     const expandedSession = await stripe.checkout.sessions.retrieve(
       session.id,
       { expand: ['line_items.data.price.product'] }
@@ -72,38 +96,50 @@ async function handleSuccessfulPayment(event: Stripe.Event) {
 
     const lineItems = expandedSession.line_items?.data || [];
 
-    // Prepare order items
     const orderItems = lineItems.map(item => ({
       product: (item.price?.product as Stripe.Product).name,
       quantity: item.quantity || 1,
-      price: (item.price?.unit_amount || 0) / 100, // Convert cents to dollars
+      price: (item.price?.unit_amount || 0) / 100,
     }));
 
-    // Calculate total
     const total = orderItems.reduce(
       (sum, item) => sum + (item.price * item.quantity),
       0
     );
 
-    // Create order in database
+    // Determine guest email
+    const guestEmail = session.customer_email || 
+                      session.metadata?.userEmail || 
+                      'unknown@guest.com';
+
+    // Create order (with or without user ID)
     const order = await prisma.order.create({
       data: {
-        userId: user.id,
+        userId: userId || null, // null for guest orders
+        guestEmail: userId ? null : guestEmail, // Only set guest email for actual guests
         status: "completed",
         total,
         orderItems: {
           create: orderItems,
         },
+        metadata: {
+          stripeSessionId: session.id,
+          isGuestOrder: !userId,
+          customerEmail: userEmail || guestEmail,
+        }
       },
       include: {
         orderItems: true,
       },
     });
 
-    console.log("Order created successfully:", order.id);
+    if (userId) {
+      console.log("Order created for user:", userEmail, "Order ID:", order.id);
+    } else {
+      console.log("Guest order created:", guestEmail, "Order ID:", order.id);
+    }
     
-  } catch (error) {
-    console.error("Failed to create order from webhook:", error);
-    // In production, you might want to retry or send an alert
+  } catch (error: unknown) {
+    console.error("Failed to create order from webhook:", error instanceof Error ? error.message : "Unknown error");
   }
 }

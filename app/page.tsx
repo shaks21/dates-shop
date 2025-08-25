@@ -337,6 +337,8 @@ export default function HomePage() {
                           src={stage.img}
                           alt={stage.step}
                           className="w-full h-full object-cover"
+                          width={600}
+                          height={400}
                         />
                       </div>
                     </div>

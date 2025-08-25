@@ -256,6 +256,8 @@ export default function InfoGraphics(): JSX.Element {
         alt={`Superfood infographic ${currentImageIndex + 1}`}
         className="absolute  w-full h-full object-contain cursor-pointer transition-all duration-300"
         loading="lazy"
+        width={800}
+        height={600}
         onClick={handleImageClick}
       />
 
