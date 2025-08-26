@@ -3,8 +3,10 @@
 import { useCartStore } from "@/lib/stores/cartStore";
 import { IProduct } from "@/models/Product";
 import CartDrawer from "./CartDrawer";
+import { Product } from '@prisma/client';
 
-export default function AddToCartButton({ product }: { product: IProduct }) {
+
+export default function AddToCartButton({ product }: { product: Product }) {
   const { addToCart, setIsCartOpen } = useCartStore();
   // const [open, setOpen] = useState(false);
 

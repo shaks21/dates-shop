@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document, models, model } from "mongoose";
+// models/Product.ts
+import mongoose, { Schema, Document, model } from "mongoose";
 
 // Define a TypeScript interface
 export interface IProduct extends Document {
@@ -18,5 +19,5 @@ const ProductSchema = new Schema<IProduct>({
   image: { type: String, required: true },
 });
 
-// Export the model
-export const Product = models.Product || model<IProduct>("Product", ProductSchema);
+// Export the model - use mongoose.models instead of models
+export const Product = mongoose.models.Product || model<IProduct>("Product", ProductSchema);

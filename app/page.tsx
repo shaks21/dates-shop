@@ -7,15 +7,8 @@ import AlternatingImages from "@/components/AlternatingImages";
 import Image from "next/image";
 // import OrbitImageSelector from "@/components/OrbitImageSelector";
 import InfoGraphics from "@/components/InfoGraphics";
+import { Product } from '@prisma/client';
 
-type Product = {
-  _id: string;
-  title: string;
-  slug: string;
-  description: string;
-  price: number;
-  image: string;
-};
 
 // Fade-in animation wrapper
 const FadeIn = ({
@@ -182,7 +175,7 @@ export default function HomePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {products.slice(0, 6).map((product) => (
                   <Link
-                    key={product._id}
+                    key={product.id}
                     href={`/products/${product.slug}`}
                     className="block group"
                   >

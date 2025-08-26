@@ -4,15 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { Product } from '@prisma/client';
 
-interface Product {
-  _id: string;
-  title: string;
-  slug: string;
-  description: string;
-  price: number; // in cents
-  image: string;
-}
+// interface Product {
+//   productId: string;
+//   title: string;
+//   slug: string;
+//   description: string;
+//   price: number; // in cents
+//   image: string;
+// }
 
 type SortOption = "title-asc" | "title-desc" | "price-asc" | "price-desc";
 
@@ -97,7 +98,7 @@ export default function ProductsClient() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {paginated.map((product) => (
           <Link
-            key={product._id}
+            key={product.id}
             href={`/products/${product.slug}`}
             className="group border border-cream-border rounded-xl overflow-hidden bg-white bg-opacity-90 shadow-md hover:shadow-xl transition-transform hover:scale-[1.02]"
             style={{ borderColor: "var(--color-cream-border)" }}

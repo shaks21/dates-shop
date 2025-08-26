@@ -1,11 +1,13 @@
+// app/api/products/route.ts
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongoose";
-import { Product } from "@/models/Product";
+import { prisma } from "@/lib/prisma"; // Adjust the import path as needed
 
 export async function GET() {
   try {
-    await connectToDatabase();
-    const products = await Product.find().lean();
+    // Fetch all products from PostgreSQL using Prisma
+    const products = await prisma.product.findMany();
+
+    // Return the products as JSON
     return NextResponse.json(products, {
       headers: { "Cache-Control": "no-store" },
     });

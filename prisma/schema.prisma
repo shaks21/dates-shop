@@ -10,12 +10,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Add this enum definition
 enum OrderStatus {
   pending
   completed
   cancelled
   refunded
+}
+
+// Add Product model
+model Product {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  price       Int      // Price in cents (integer)
+  image       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  orderItems  OrderItem[]
+
+  @@map("products")
 }
 
 model User {
@@ -36,25 +52,30 @@ model User {
 
 model Order {
   id         String      @id @default(cuid())
-  userId     String?     // Make userId optional
+  userId     String?
   user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   guestEmail String?
-  status     OrderStatus // Now this references the defined enum
+  status     OrderStatus
   total      Float
   orderItems OrderItem[]
   metadata   Json?
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+
+  @@index([metadata], map: "stripe_session_idx")
 }
 
 model OrderItem {
   id        String   @id @default(cuid())
   orderId   String
-  product   String
+  productId String   // Foreign key to Product
   quantity  Int
-  price     Float
+  price     Float    // Price at time of purchase (in dollars)
 
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
 }
 
 model Account {

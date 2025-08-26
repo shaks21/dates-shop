@@ -2,14 +2,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Product } from '@prisma/client';
 
-type Product = {
-  _id: string;
-  title: string;
-  slug: string;
-  image: string;
-  price: number;
-};
 
 export default function RelatedProducts({ currentSlug }: { currentSlug: string }) {
   const [products, setProducts] = useState<Product[]>([]);
@@ -37,7 +31,7 @@ export default function RelatedProducts({ currentSlug }: { currentSlug: string }
       <div className="space-y-5">
         {products.map((product) => (
           <Link
-            key={product._id}
+            key={product.id}
             href={`/products/${product.slug}`}
             className="flex items-center gap-4 p-2 rounded-lg transition-all duration-200 hover:bg-amber-400 hover:shadow-lg"
             style={{ backgroundColor: "transparent" }}

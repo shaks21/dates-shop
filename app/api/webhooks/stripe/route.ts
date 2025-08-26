@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.text();
-    
+
     const event = stripe.webhooks.constructEvent(
       body,
       sig,
@@ -34,7 +34,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (error: unknown) {
-    console.error("Webhook error:", error instanceof Error ? error.message : "Unknown error");
+    console.error(
+      "Webhook error:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 }
@@ -45,7 +48,7 @@ export async function POST(req: NextRequest) {
 async function handleSuccessfulPayment(event: Stripe.Event) {
   const session = event.data.object as Stripe.Checkout.Session;
 
-  if (session.payment_status !== 'paid') {
+  if (session.payment_status !== "paid") {
     console.log("Session not paid:", session.id);
     return;
   }
@@ -91,32 +94,36 @@ async function handleSuccessfulPayment(event: Stripe.Event) {
     // Get session details
     const expandedSession = await stripe.checkout.sessions.retrieve(
       session.id,
-      { expand: ['line_items.data.price.product'] }
+      { expand: ["line_items.data.price.product"] }
     );
 
     const lineItems = expandedSession.line_items?.data || [];
 
-    const orderItems = lineItems.map(item => ({
-      product: (item.price?.product as Stripe.Product).name,
-      quantity: item.quantity || 1,
-      price: (item.price?.unit_amount || 0) / 100,
-    }));
+    const orderItems = lineItems.map((item) => {
+      const product = item.price?.product as Stripe.Product;
+      return {
+        productId: product.metadata?.productId || product.id, // Use product ID from metadata or fallback to Stripe ID
+        quantity: item.quantity || 1,
+        price: (item.price?.unit_amount || 0) / 100, // Convert cents to dollars
+      };
+    });
 
     const total = orderItems.reduce(
-      (sum, item) => sum + (item.price * item.quantity),
+      (sum, item) => sum + item.price * item.quantity,
       0
     );
 
     // Determine guest email
-    const guestEmail = session.customer_email || 
-                      session.metadata?.userEmail || 
-                      'unknown@guest.com';
+    const guestEmail =
+      session.customer_email ||
+      session.metadata?.userEmail ||
+      "unknown@guest.com";
 
     // Create order (with or without user ID)
     const order = await prisma.order.create({
       data: {
-        userId: userId || null, // null for guest orders
-        guestEmail: userId ? null : guestEmail, // Only set guest email for actual guests
+        userId: userId || null,
+        guestEmail: userId ? null : guestEmail,
         status: "completed",
         total,
         orderItems: {
@@ -126,10 +133,14 @@ async function handleSuccessfulPayment(event: Stripe.Event) {
           stripeSessionId: session.id,
           isGuestOrder: !userId,
           customerEmail: userEmail || guestEmail,
-        }
+        },
       },
       include: {
-        orderItems: true,
+        orderItems: {
+          include: {
+            product: true, // Include product details
+          },
+        },
       },
     });
 
@@ -138,8 +149,10 @@ async function handleSuccessfulPayment(event: Stripe.Event) {
     } else {
       console.log("Guest order created:", guestEmail, "Order ID:", order.id);
     }
-    
   } catch (error: unknown) {
-    console.error("Failed to create order from webhook:", error instanceof Error ? error.message : "Unknown error");
+    console.error(
+      "Failed to create order from webhook:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
   }
 }
