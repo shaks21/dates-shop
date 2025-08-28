@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -140,10 +140,10 @@ export default function Dashboard() {
 
         {/* Sign Out Button */}
         <button
-          onClick={() => signOut({ callbackUrl: "/" })}
-          className="w-full py-3 mt-4 bg-amber-600 text-white uppercase tracking-wider text-sm hover:bg-amber-700 transition-colors duration-300 rounded"
+          onClick={() => router.push("/products")}
+          className="px-4 py-3 mt-4 bg-amber-600 text-white uppercase tracking-wider text-sm hover:bg-amber-700 transition-colors duration-300 rounded"
         >
-          Sign Out
+          Shop
         </button>
       </motion.div>
     </div>

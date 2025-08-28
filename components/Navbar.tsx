@@ -35,7 +35,6 @@ export default function Navbar() {
       <nav className="flex flex-col items-center">
         {/* Top Banner with Slogan & Cart */}
         <div className="relative w-full py-1 border-b-1 border-b-black flex items-center justify-center">
-          
           {/* Mobile Burger Button */}
           <button
             className="md:hidden flex flex-col gap-1 absolute right-25 z-60"
@@ -75,14 +74,12 @@ export default function Navbar() {
             Nature&apos;s Finest. Delivered with Elegance.
           </span>
 
-          
-
           <div className="hidden md:flex gap-4 absolute right-44 top-1/2 -translate-y-1/2">
             <CurrencyButton />
           </div>
 
           {/* Cart buttons aligned right on medium and up */}
-          <div className=" flex gap-2 md:gap-4 absolute right-4 top-1/2 -translate-y-1/2">
+          <div className="absolute inset-y-0 right-4 flex items-center gap-2 md:gap-4">
             <SearchButton />
             <AccountButton />
             <CartButton />
@@ -147,7 +144,7 @@ export default function Navbar() {
           <div className="absolute inset-0 bg-gradient-to-br from-amber-50/95 to-gray-100/95 backdrop-blur-sm dark:from-gray-900/95 dark:to-gray-800/95" />
 
           {/* Menu items container */}
-          <div className="relative z-10 flex flex-col items-center space-y-8">
+          <div className="relative z-10 flex flex-col items-center space-y-8 ">
             {[
               { href: "/products", label: "Shop" },
               { href: "/#about", label: "Our Story" },

@@ -1,7 +1,7 @@
 // components/AddToCartButton.tsx
 "use client";
 import { useCartStore } from "@/lib/stores/cartStore";
-import { IProduct } from "@/models/Product";
+// import { IProduct } from "@/models/Product";
 import CartDrawer from "./CartDrawer";
 import { Product } from '@prisma/client';
 

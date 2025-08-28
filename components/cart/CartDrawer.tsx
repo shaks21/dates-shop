@@ -1,7 +1,7 @@
 "use client";
 
 import { X, Minus, Plus } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";

@@ -110,35 +110,39 @@ export default function SuccessClient() {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-20 p-10 bg-black text-white rounded-2xl shadow-xl space-y-6">
-      <CheckCircle size={48} className="mx-auto text-green-500" />
-      <h1 className="text-3xl font-black text-center">Order Confirmed</h1>
-      <p className="text-center">
-        Thank you for your purchase—your payment was successful.
+    <div className="max-w-xl mx-auto mt-20 p-8 bg-cream text-charcoal rounded-2xl shadow-lg space-y-6">
+      <CheckCircle size={48} className="mx-auto text-amber-400" />
+      <h1 className="text-3xl font-serif font-black text-center">
+        Order Confirmed
+      </h1>
+      <p className="text-center text-charcoal/80">
+        Thank you for your purchase — your payment was successful.
       </p>
-
       {customerEmail && (
-        <p className="text-center text-gray-400">
+        <p className="text-center text-charcoal/60">
           Receipt sent to <strong>{customerEmail}</strong>.
         </p>
       )}
 
-      <div className="bg-zinc-900 rounded-lg p-4 space-y-3">
-        <h2 className="font-black uppercase border-b border-zinc-700 pb-2">
+      <div className="bg-white rounded-lg p-4 space-y-4 shadow-inner border border-cream-border">
+        <h2 className="font-serif font-semibold uppercase border-b border-amber-300 pb-2">
           Order Summary
         </h2>
         {lineItems.map((li) => (
-          <div key={li.description} className="flex justify-between">
+          <div
+            key={li.description}
+            className="flex justify-between items-center"
+          >
             <div>
-              <p className="font-medium">{li.description}</p>
-              <p className="text-sm text-gray-400">Qty: {li.quantity}</p>
+              <p className="font-semibold">{li.description}</p>
+              <p className="text-sm text-charcoal/60">Qty: {li.quantity}</p>
             </div>
-            <p className="font-black">
+            <p className="font-serif font-bold">
               ${((li.amount_subtotal ?? 0) / 100).toFixed(2)}
             </p>
           </div>
         ))}
-        <div className="border-t border-zinc-700 pt-3 flex justify-between font-black uppercase">
+        <div className="border-t border-amber-300 pt-3 flex justify-between font-serif font-black uppercase">
           <span>Total</span>
           <span>
             $
@@ -149,15 +153,15 @@ export default function SuccessClient() {
         </div>
       </div>
 
-      <p className="text-sm text-gray-500 text-center">
+      <p className="text-sm text-charcoal/60 text-center">
         You&apos;ll be redirected to the homepage in a few seconds.
       </p>
 
       <button
         onClick={() => router.push("/")}
-        className="block mx-auto px-6 py-3 bg-white text-black font-bold uppercase rounded-xl hover:opacity-80 transition"
+        className="block mx-auto px-6 py-3 bg-amber-400 text-black font-seriffont-bold uppercase rounded-xl hover:bg-amber-500 transition"
       >
-        Continue Shopping Now
+        Continue Shopping
       </button>
     </div>
   );

@@ -3,8 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { UserIcon } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function AccountButton() {
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +23,8 @@ export default function AccountButton() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const isLoggedIn = !!session?.user;
+
   return (
     <div ref={dropdownRef}>
       <div className=" h-full flex items-center">
@@ -35,20 +39,43 @@ export default function AccountButton() {
 
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-white border border-[color:var(--color-gold)] shadow-md rounded z-50">
-          <Link
-            href="/dashboard"
-            className="block px-4 py-2 text-sm hover:bg-gray-100"
-            onClick={() => setOpen(false)}
-          >
-            My Account
-          </Link>
-          <Link
-            href="/register"
-            className="block px-4 py-2 text-sm hover:bg-gray-100"
-            onClick={() => setOpen(false)}
-          >
-            Create Account
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="block px-4 py-2 text-sm hover:bg-gray-100"
+                onClick={() => setOpen(false)}
+              >
+                My Account
+              </Link>
+              <button
+                onClick={() => {
+                  signOut();
+                  setOpen(false);
+                }}
+                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/api/auth/signin"
+                className="block px-4 py-2 text-sm hover:bg-gray-100"
+                onClick={() => setOpen(false)}
+              >
+                Log In
+              </Link>
+              <Link
+                href="/register"
+                className="block px-4 py-2 text-sm hover:bg-gray-100"
+                onClick={() => setOpen(false)}
+              >
+                Create Account
+              </Link>
+            </>
+          )}
         </div>
       )}
     </div>
