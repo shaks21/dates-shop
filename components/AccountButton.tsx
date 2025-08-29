@@ -38,7 +38,7 @@ export default function AccountButton() {
       </div>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-white border border-[color:var(--color-gold)] shadow-md rounded z-50">
+        <div className="absolute right-0 mt-2 w-48 bg-white border border-amber-800 shadow-md rounded z-50">
           {isLoggedIn ? (
             <>
               <Link
@@ -53,7 +53,7 @@ export default function AccountButton() {
                   signOut();
                   setOpen(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                className="w-full text-left px-4 py-2 text-sm hover:bg-red-100"
               >
                 Logout
               </button>

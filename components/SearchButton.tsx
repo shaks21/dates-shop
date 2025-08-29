@@ -17,6 +17,7 @@ export default function SearchButton() {
       router.replace(searchUrl); // Replace to avoid adding to history
       router.refresh(); // Force reload of current route
       setIsOpen(false);
+      setQuery("");
     }
   };
 
@@ -50,7 +51,7 @@ export default function SearchButton() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-60 z-50">
-          <div className="grid grid-cols-[1fr_auto] border border-[color:var(--color-gold)] rounded overflow-hidden bg-white">
+          <div className="grid grid-cols-[1fr_auto] border border-amber-800 rounded overflow-hidden bg-white">
             <input
               type="text"
               placeholder="Search products..."
@@ -61,7 +62,7 @@ export default function SearchButton() {
             />
             <button
               onClick={handleSearch}
-              className="px-3 bg-[color:var(--color-gold)] hover:opacity-90 text-white flex items-center justify-center"
+              className="px-3 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 flex items-center justify-center"
             >
               <Search className="w-5 h-5" />
             </button>

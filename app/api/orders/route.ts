@@ -1,9 +1,8 @@
 // app/api/orders/route.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions"; 
-import { Order, OrderItem } from ".prisma/client";
 
 export async function GET() {
   try {
@@ -13,13 +12,22 @@ export async function GET() {
       return NextResponse.json({ orders: [] }, { status: 401 });
     }
 
-    // Get user with orders and order items
+    // Get user with orders, order items, and product details
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       include: {
         orders: {
           include: {
-            orderItems: true,
+            orderItems: {
+              include: {
+                product: {
+                  select: {
+                    id: true,
+                    title: true, // Include product title
+                  },
+                },
+              },
+            },
           },
           orderBy: {
             createdAt: "desc",
@@ -32,24 +40,19 @@ export async function GET() {
       return NextResponse.json({ orders: [] });
     }
 
-    // Map orders to include total per order
-    const orders = user.orders.map(
-      (order: Order & { orderItems: OrderItem[] }) => ({
-        id: order.id,
-        status: order.status,
-        createdAt: order.createdAt.toISOString(),
-        total: order.orderItems.reduce(
-          (sum: number, item: OrderItem) => sum + item.price * item.quantity,
-          0
-        ),
-        orderItems: order.orderItems.map((item: OrderItem) => ({
-          id: item.id,
-          product: item.productId,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-      })
-    );
+    // Map orders to include product names
+    const orders = user.orders.map((order) => ({
+      id: order.id,
+      status: order.status,
+      createdAt: order.createdAt.toISOString(),
+      total: order.total, // Use the stored total instead of recalculating
+      orderItems: order.orderItems.map((item) => ({
+        id: item.id,
+        product: item.product.title, // Use product title instead of ID
+        quantity: item.quantity,
+        price: item.price,
+      })),
+    }));
 
     return NextResponse.json({ orders });
   } catch (error) {
