@@ -27,18 +27,19 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
   };
 
   return (
+    
     <aside className="w-64 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col shadow-md md:shadow-none">
       {/* Mobile Close */}
-      <button
+      {/* <button
         onClick={onNavigate}
-        className="md:hidden self-end m-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="md:hidden self-end m-10 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         aria-label="Close menu"
       >
         <X size={20} className="text-gray-500 dark:text-gray-400" />
-      </button>
+      </button> */}
 
       {/* User Info */}
-      <div className="flex items-center gap-3 px-6 pb-6 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex items-center gap-3 md:mt-0 mt-20 px-6 pb-6 border-r-0 border-b border-gray-200 dark:border-gray-800">
         {session?.user?.image && (
           <Image
             src={session.user.image}

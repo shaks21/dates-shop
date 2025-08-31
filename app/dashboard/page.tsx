@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Sidebar from "@/components/Sidebar";
-import { Menu } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
 interface OrderItem {
   id: string;
@@ -49,7 +49,9 @@ export default function Dashboard() {
         setOrders(data.orders);
       } catch (error) {
         console.error("Failed to fetch orders:", error);
-        setError(error instanceof Error ? error.message : "Failed to load orders");
+        setError(
+          error instanceof Error ? error.message : "Failed to load orders"
+        );
       } finally {
         setOrdersLoading(false);
       }
@@ -62,15 +64,15 @@ export default function Dashboard() {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (sidebarOpen && window.innerWidth < 768) {
-        const sidebar = document.querySelector('aside');
+        const sidebar = document.querySelector("aside");
         if (sidebar && !sidebar.contains(e.target as Node)) {
           setSidebarOpen(false);
         }
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [sidebarOpen]);
 
   if (status === "loading") {
@@ -84,30 +86,57 @@ export default function Dashboard() {
   if (!session) return null;
 
   return (
-    <div className="min-h-screen flex bg-cream dark:bg-gray-900 py-5">
+    <div className="min-h-screen flex dark:bg-gray-900 ">
       {/* Mobile Menu Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="md:hidden fixed  z-50 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700"
+        className="md:hidden h-20 w-6 mt-42 fixed z-50 top-1/2 -translate-y-1/2 py-2 bg-white/90 dark:bg-gray-800/90 border border-gray-300 dark:border-gray-600 border-l-0 rounded-r-lg transition-all duration-500 ease-out hover:w-7 hover:bg-white dark:hover:bg-gray-800 group"
         aria-label="Toggle menu"
+        style={{
+          left: sidebarOpen ? "16rem" : "0",
+          transition: "left 0.5s cubic-bezier(0.4, 0, 0.2, 1), all 0.3s ease",
+        }}
       >
-        <Menu size={10} className="text-gray-700 dark:text-gray-300" />
+        <div className="h-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+          {sidebarOpen ? (
+            <ChevronLeft
+              size={20}
+              className="text-gray-700 dark:text-gray-300 transition-all duration-300"
+            />
+          ) : (
+            <ChevronRight
+              size={20}
+              className="text-gray-700 dark:text-gray-300 transition-all duration-300"
+            />
+          )}
+        </div>
       </button>
 
-      {/* Sidebar with mobile responsiveness */}
-      <div className={`
-        fixed md:static inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        w-64 bg-white dark:bg-gray-800 shadow-lg md:shadow-none border-r border-gray-200 dark:border-gray-700
-      `}>
+      {/* Sidebar with enhanced transitions */}
+      <div
+        className={`
+    fixed md:static inset-y-0 left-0 z-40 md:mt-5 mt-10
+    transition-transform duration-500 ease-in-out
+    ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+    w-64 bg-white dark:bg-gray-800 shadow-xl md:shadow-none border-r border-gray-200 dark:border-gray-700
+    md:rounded-r-lg overflow-hidden
+  `}
+        style={{
+          transitionProperty: "transform",
+          willChange: "transform",
+          transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+          transition: "left 0.3s cubic-bezier(0.4, 0, 0.2, 1), all 0.6s ease",
+        }}
+      >
         <Sidebar onNavigate={() => setSidebarOpen(false)} />
       </div>
 
-      {/* Overlay for mobile */}
+      {/* Enhanced overlay for mobile */}
       {sidebarOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-30 transition-opacity duration-500 ease-in-out"
           onClick={() => setSidebarOpen(false)}
+          style={{ animation: "fadeIn 0.3s ease-out" }}
         />
       )}
 
@@ -189,14 +218,17 @@ export default function Dashboard() {
                       {order.status}
                     </span>
                   </div>
-                  
+
                   <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3">
                     Placed on: {new Date(order.createdAt).toLocaleDateString()}
                   </div>
-                  
+
                   <ul className="mb-3 space-y-2">
                     {order.orderItems.map((item) => (
-                      <li key={item.id} className="flex justify-between items-center text-sm sm:text-base">
+                      <li
+                        key={item.id}
+                        className="flex justify-between items-center text-sm sm:text-base"
+                      >
                         <span className="flex-1">
                           {item.product} × {item.quantity}
                         </span>
@@ -206,7 +238,7 @@ export default function Dashboard() {
                       </li>
                     ))}
                   </ul>
-                  
+
                   <div className="text-right font-semibold text-gray-800 dark:text-white text-sm sm:text-base border-t pt-3">
                     Total: ${order.total.toFixed(2)}
                   </div>
